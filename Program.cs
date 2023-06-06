@@ -11,13 +11,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using System.Windows.Forms;
+using System.Resources;
+using System.Collections;
+using DocumentFormat.OpenXml.Spreadsheet;
+
 namespace ExportImport_MazzerTraduzioni
 {
-    class Program
-    {
-        static string column1 = "Area";
-        static string column2 = "Id";
+    
 
+    class Program
+    {       
         static void Main(string[] args)
         {
             //if (args.Length == 0)
@@ -27,23 +31,37 @@ namespace ExportImport_MazzerTraduzioni
             //}
 
             //string file = args[0];
-            string path_dir_resources = @"C:\Users\quan\Documents\project_2023\parser\parser_resources";
+
+            // example JSON
+            //string path_dir_resources = @"C:\Users\quan\Documents\project_2023\parser\parser_resources_json";            
+            // example RESX
+            string path_dir_resources = @"C:\Users\quan\Documents\project_2023\parser\parser_resources_resx";
+
+
+            string column1 = "";
+            string column2 = "";
             string[] path_files = Directory.GetFiles(path_dir_resources);
             string jsonInput;
-            string languague_suffix;
+            string? languague_suffix;
             string column_name = "";
+            bool contains = false;
             List<Item> data;
             DataTable dt;
             DataRow? query_res;
-            
+            DataColumnCollection dt_columns;
+
+
             dt = new DataTable();
-            dt.Columns.Add(column1, typeof(string));
-            dt.Columns.Add(column2, typeof(string));
 
             foreach (string path_file in path_files)
             {                
                 if (Path.GetExtension(path_file) == ".json")
                 {
+                    column1 = "Area";
+                    column2 = "Id";
+                    dt.Columns.Add(column1, typeof(string));
+                    dt.Columns.Add(column2, typeof(string));
+                    
                     // get langugae suffix from file name, e.g., "it", "en", "es", etc.
                     languague_suffix = path_file.Split('\\').Last();
                     languague_suffix = languague_suffix.Split('.')[0];
@@ -71,7 +89,7 @@ namespace ExportImport_MazzerTraduzioni
                     foreach (Item item in data)
                     {   
                         // check whether the specific pair <area, id> already exists in the data table
-                        bool contains = dt.AsEnumerable().Any(row => item.area == row.Field<String>("Area") && item.key == row.Field<String>("Id"));
+                        contains = dt.AsEnumerable().Any(row => item.area == row.Field<String>("Area") && item.key == row.Field<String>("Id"));
                         // if the pair <area, id> does not exist in the data table, insert it values of <area, key, value> as a new row
                         if (contains == false)
                         {
@@ -85,7 +103,7 @@ namespace ExportImport_MazzerTraduzioni
                         else
                         {                            
                             query_res = dt.AsEnumerable()
-                                          .SingleOrDefault(r => r.Field<String>("Area") == item.area && r.Field<String>("Id") == item.key);   
+                                          .SingleOrDefault(row => row.Field<String>("Area") == item.area && row.Field<String>("Id") == item.key);   
                             // if find the result, then insert the value
                             if (query_res != null)
                             {
@@ -93,7 +111,68 @@ namespace ExportImport_MazzerTraduzioni
                             }
                         }
                     }
-                }                
+                }
+
+                if (Path.GetExtension(path_file) == ".resx")
+                {
+                    //string resxFile = @"C:\Users\quan\Documents\project_2023\parser\parser_resources_resx\AppResources.it.resx";
+                    //List<Automobile> autos = new List<Automobile>();
+                    //SortedList headers = new SortedList();
+
+                    column1 = "Id";
+                    dt_columns = dt.Columns;
+                    if (!dt_columns.Contains(column1))
+                    {
+                        dt.Columns.Add(column1, typeof(string));
+                    }
+
+                    using (ResXResourceReader resxReader = new ResXResourceReader(path_file))
+                    {
+                        if (resxReader == null)
+                        {
+                            continue;
+                        }
+
+                        foreach (DictionaryEntry entry in resxReader)
+                        {                              
+                            if ((string?)entry.Key == "Language")
+                            {
+                                languague_suffix = (string?)entry.Value;                       
+
+                                switch (languague_suffix)
+                                {
+                                    case "it":
+                                        column_name = "Italiano/IT(it)";
+                                        break;
+                                    case "en":
+                                        column_name = "English/EN(en)";
+                                        break;
+                                }
+                                // add new language column
+                                dt.Columns.Add(column_name, typeof(string));
+                            }
+
+                            contains = dt.AsEnumerable().Any(row => (string)entry.Key == row.Field<String>("Id"));
+                            if (contains == false)
+                            {
+                                DataRow newRow = dt.NewRow();
+                                newRow[column1] = (string)entry.Key;
+                                newRow[column_name] = (string?)entry.Value;
+                                dt.Rows.Add(newRow);
+                            }
+                            else
+                            {
+                                query_res = dt.AsEnumerable()
+                                          .SingleOrDefault(row => (string)entry.Key == row.Field<String>("Id"));
+                                // if find the result, then insert the value
+                                if (query_res != null)
+                                {
+                                    query_res[column_name] = (string?)entry.Value;
+                                }
+                            }
+                        }
+                    }                    
+                }
             }
                        
             XLWorkbook wb = new XLWorkbook();
@@ -102,8 +181,6 @@ namespace ExportImport_MazzerTraduzioni
             wb.SaveAs(xlsPath);          
 
             //string fileName = "WorksheetName_" + DateTime.Now.ToLongTimeString() + ".xlsx";
-            //string xlsPath = @"C:\Users\fonio.TXTGROUP\Desktop\Mazzer\file traduzioni\" + fileName;
-            //string xlsPath = @"C:\Users\fonio.TXTGROUP\Desktop\Mazzer\file traduzioni\webapp_it.xlsx";
         }
 
         static public List<Item> JsonParser(string json)

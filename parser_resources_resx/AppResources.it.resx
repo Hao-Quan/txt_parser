@@ -1,0 +1,1140 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Language" xml:space="preserve">
+    <value>it</value>
+  </data>
+  <data name="Alert_Positive" xml:space="preserve">
+    <value>SI</value>
+  </data>
+  <data name="Alert_Negative" xml:space="preserve">
+    <value>NO</value>
+  </data>
+  <data name="LoginViewController_Welcome" xml:space="preserve">
+    <value>BENVENUTO</value>
+  </data>
+  <data name="LoginViewController_Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="LoginViewController_Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="LoginViewController_Login" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="LoginViewController_RecoverPassword" xml:space="preserve">
+    <value>Recupera password</value>
+  </data>
+  <data name="LoginViewController_SignUp" xml:space="preserve">
+    <value>Registrati</value>
+  </data>
+  <data name="LoginViewController_Error" xml:space="preserve">
+    <value>Errore</value>
+  </data>
+  <data name="LoginViewController_ErrorMessage" xml:space="preserve">
+    <value>Impossibile effettuare il login, controllare le credenziali di accesso</value>
+  </data>
+  <data name="PasswordResetViewController_ResetPassword" xml:space="preserve">
+    <value>Recupera password</value>
+  </data>
+  <data name="PasswordResetViewController_Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="PasswordResetViewController_InsertEmail" xml:space="preserve">
+    <value>Inserisci la tua E-mail</value>
+  </data>
+  <data name="PasswordResetViewController_AlertOk" xml:space="preserve">
+    <value>Procedura completata</value>
+  </data>
+  <data name="PasswordResetViewController_AlertOkMessage" xml:space="preserve">
+    <value>Riceverai una mail con i passi necessari per effettuare il reset della password</value>
+  </data>
+  <data name="PasswordResetViewController_AlertError" xml:space="preserve">
+    <value>Errore</value>
+  </data>
+  <data name="PasswordResetViewController_AlertErrorMessage" xml:space="preserve">
+    <value>Impossibile effettuare il reset della password, controllare i dati inseriti</value>
+  </data>
+  <data name="SignUpViewController_LoginData" xml:space="preserve">
+    <value>DATI DI LOGIN</value>
+  </data>
+  <data name="SignUpViewController_Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="SignUpViewController_Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="SignUpViewController_ConfirmPassword" xml:space="preserve">
+    <value>Confirm password</value>
+  </data>
+  <data name="SignUpViewController_UserData" xml:space="preserve">
+    <value>INFORMAZIONI PERSONALI</value>
+  </data>
+  <data name="SignUpViewController_Company" xml:space="preserve">
+    <value>Compagnia</value>
+  </data>
+  <data name="SignUpViewController_Mr" xml:space="preserve">
+    <value>Sig.</value>
+  </data>
+  <data name="SignUpViewController_Ms" xml:space="preserve">
+    <value>Sig.ra</value>
+  </data>
+  <data name="SignUpViewController_Name" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="SignUpViewController_Surname" xml:space="preserve">
+    <value>Cognome</value>
+  </data>
+  <data name="SignUpViewController_Role" xml:space="preserve">
+    <value>Ruolo aziendale</value>
+  </data>
+  <data name="SignUpViewController_Tel" xml:space="preserve">
+    <value>Telefono</value>
+  </data>
+  <data name="SignUpViewController_Address" xml:space="preserve">
+    <value>Indirizzo</value>
+  </data>
+  <data name="SignUpViewController_Zip" xml:space="preserve">
+    <value>CAP</value>
+  </data>
+  <data name="SignUpViewController_City" xml:space="preserve">
+    <value>Città</value>
+  </data>
+  <data name="SignUpViewController_Country" xml:space="preserve">
+    <value>Stato</value>
+  </data>
+  <data name="SignUpViewController_Activity" xml:space="preserve">
+    <value>Tipo di attività</value>
+  </data>
+  <data name="SignUpViewController_RequiredFields" xml:space="preserve">
+    <value>*Campi obbligatori</value>
+  </data>
+  <data name="SignUpViewController_Authorizations" xml:space="preserve">
+    <value>AUTORIZZAZIONI</value>
+  </data>
+  <data name="SignUpViewController_Privacy" xml:space="preserve">
+    <value>Termini di servizio e politica della Privacy</value>
+  </data>
+  <data name="SignUpViewController_Marketing" xml:space="preserve">
+    <value>Autorizzazione dati commerciali</value>
+  </data>
+  <data name="SignUpViewController_SignUp" xml:space="preserve">
+    <value>Registrati</value>
+  </data>
+  <data name="SignUpViewController_Commercial" xml:space="preserve">
+    <value>Autorizzazione dati commerciali</value>
+  </data>
+  <data name="SignUpViewController_ValidationError" xml:space="preserve">
+    <value>Errore di validazione</value>
+  </data>
+  <data name="SignUpViewController_CheckFields" xml:space="preserve">
+    <value>Controlla i dati inseriti</value>
+  </data>
+  <data name="SignUpViewController_Registered" xml:space="preserve">
+    <value>Registrazione completata, controlla il tuo indirizzo email per verificare l'utente</value>
+  </data>
+  <data name="SignUpViewController_Error" xml:space="preserve">
+    <value>Errore</value>
+  </data>
+  <data name="GrindersList" xml:space="preserve">
+    <value>Parco Macchine</value>
+  </data>
+  <data name="GrinderSettings" xml:space="preserve">
+    <value>Regolazioni</value>
+  </data>
+  <data name="GrinderMonitor" xml:space="preserve">
+    <value>Statistiche</value>
+  </data>
+  <data name="GrinderService" xml:space="preserve">
+    <value>Service</value>
+  </data>
+  <data name="GrinderLiking" xml:space="preserve">
+    <value>Sondaggio</value>
+  </data>
+  <data name="GrinderEnvironment" xml:space="preserve">
+    <value>Vai a:</value>
+  </data>
+  <data name="GrinderSelectConnected" xml:space="preserve">
+    <value>Seleziona almeno un macinacaffè connesso</value>
+  </data>
+  <data name="GrinderSelectNoPermissions" xml:space="preserve">
+    <value>L'accesso a questa sezione è vietato per questo macinacaffè</value>
+  </data>
+  <data name="GrinderCell_Deactivated" xml:space="preserve">
+    <value>Disattiva</value>
+  </data>
+  <data name="GrinderCell_Grinder" xml:space="preserve">
+    <value>Macinacaffè</value>
+  </data>
+  <data name="DescriptionManual_Description" xml:space="preserve">
+    <value>INSERISCI MANUALMENTE lA MATRICOLA EVIDENZIATA</value>
+  </data>
+  <data name="DescriptionManual_Code" xml:space="preserve">
+    <value>Matricola</value>
+  </data>
+  <data name="DescriptionManual_Continue" xml:space="preserve">
+    <value>Procedi</value>
+  </data>
+  <data name="DescriptionManual_Cancel" xml:space="preserve">
+    <value>Indietro</value>
+  </data>
+  <data name="DescriptionManual_ErrorWrongCodeTitle" xml:space="preserve">
+    <value>Errore</value>
+  </data>
+  <data name="DescriptionManual_ErrorWrongCodeMessage" xml:space="preserve">
+    <value>Matricola non valida</value>
+  </data>
+  <data name="DescriptionManual_MaxLenght" xml:space="preserve">
+    <value>La matricola deve essere di 7 cifre</value>
+  </data>
+  <data name="DescriptionManual_WrongCode" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DescriptionBarcode_Description" xml:space="preserve">
+    <value>LEGGI IL BARCODE EVIDENZIATO SUL MACINACAFFÈ O SULL'IMBALLO</value>
+  </data>
+  <data name="DescriptionBarcode_StartScan" xml:space="preserve">
+    <value>Comincia la lettura</value>
+  </data>
+  <data name="DescriptionBarcode_InsetManually" xml:space="preserve">
+    <value>O inseriscilo manualmente</value>
+  </data>
+  <data name="DescriptionBarcode_ErrorWrongCodeTitle" xml:space="preserve">
+    <value>Errore</value>
+  </data>
+  <data name="DescriptionBarcode_ErrorWrongCodeMessage" xml:space="preserve">
+    <value>Il barcode letto non è valido</value>
+  </data>
+  <data name="PolicyViewController_Title" xml:space="preserve">
+    <value>Termini di servizio </value>
+  </data>
+  <data name="PolicyViewController_Text" xml:space="preserve">
+    <value>Registrando questo macinacaffè, si dichiare di eserne il proprietario oppure di avere l'autorizzazione del proprietario di accedere alle informazioni del macinacaffè attraverso l'APP, in accordo con i termini di servizio e i relativi aggiornamenti, accessibili dal menu sotto la voce "impostazioni"</value>
+  </data>
+  <data name="PolicyViewController_Accept" xml:space="preserve">
+    <value>Ok</value>
+  </data>
+  <data name="PolicyViewController_ActivateAlertMessage" xml:space="preserve">
+    <value>Vuoi procedere ora all'attivazione? (potrai comunque eseguire la procedura in un secondo momento menu dell'app)</value>
+  </data>
+  <data name="PolicyViewController_ActivateAlertPositive" xml:space="preserve">
+    <value>SI</value>
+  </data>
+  <data name="PolicyViewController_ActivateAlertNegative" xml:space="preserve">
+    <value>NO</value>
+  </data>
+  <data name="PolicyViewController_ErrorOwner" xml:space="preserve">
+    <value>Hai già registrato questo macinacaffè</value>
+  </data>
+  <data name="PolicyViewController_Error" xml:space="preserve">
+    <value>Errore</value>
+  </data>
+  <data name="PolicyViewController_ErrorAlert" xml:space="preserve">
+    <value>Non è possibile completare l'operazione. Riprovare più tardi</value>
+  </data>
+  <data name="ConnectGrinderViewController_Title" xml:space="preserve">
+    <value>CONNETTITI AL MACINACAFFÈ</value>
+  </data>
+  <data name="ConnectGrinderViewController_Text1" xml:space="preserve">
+    <value>Assicurati che il macinacaffè sia impostato sulla modalità di rete peer-to-peer. Se lo è, nella zona notifiche della schermata del display in standby è visibile l'icona [wifi-icon]</value>
+  </data>
+  <data name="ConnectGrinderViewController_Text2" xml:space="preserve">
+    <value>Entra nel menu informazioni di connessione del macinacaffè ([settings-icon] .6) e visualizza il nome e la password della rete peer-to-peer del macinacaffè</value>
+  </data>
+  <data name="ConnectGrinderViewController_Text3" xml:space="preserve">
+    <value>Ricerca la rete peer-to-peer del macinacaffè dalle impostazioni di rete del tuo smartphone</value>
+  </data>
+  <data name="ConnectGrinderViewController_Text4" xml:space="preserve">
+    <value>Inserisci il nome della rete e la password che leggi sul macinacaffè</value>
+  </data>
+  <data name="ConnectGrinderViewController_Text5" xml:space="preserve">
+    <value>Ritorna sull'app Mazzer</value>
+  </data>
+  <data name="ConnectGrinderViewController_GpsAlert" xml:space="preserve">
+    <value>Se la procedura di attivazione non va a buon fine provare a disattivare i dati mobili del cellulare o ad attivare la geolocalizzazione e riprovare ad attivare il macinacaffè</value>
+  </data>
+  <data name="ActivationDone_Title" xml:space="preserve">
+    <value>ATTIVAZIONE COMPLETATA</value>
+  </data>
+  <data name="ActivationDone_Mac" xml:space="preserve">
+    <value>MAC address</value>
+  </data>
+  <data name="ActivationDone_Conclude" xml:space="preserve">
+    <value>Concludi</value>
+  </data>
+  <data name="ActivationDone_NetworkParams" xml:space="preserve">
+    <value>Per connettere il macinacaffè alla rete wi-fi è necessario configurare i parametri di rete. Vuoi procedere ora?</value>
+  </data>
+  <data name="Claim_YetConnected" xml:space="preserve">
+    <value>IL MACINACAFFÈ È GIÀ ASSOCIATO AD UN ALTRO UTENTE</value>
+  </data>
+  <data name="Claim_RequestAccess" xml:space="preserve">
+    <value>Invia richiesta accesso al master</value>
+  </data>
+  <data name="Claim_RequestRelease" xml:space="preserve">
+    <value>Chiedi all'utente master di rilasciare il macinacaffè</value>
+  </data>
+  <data name="Claim_RequestDone" xml:space="preserve">
+    <value>Procedura completata</value>
+  </data>
+  <data name="Claim_Error" xml:space="preserve">
+    <value>Errore</value>
+  </data>
+  <data name="Claim_Connection" xml:space="preserve">
+    <value>Verificare che lo smartphone sia connesso a internet</value>
+  </data>
+  <data name="NetworkConfig_Title" xml:space="preserve">
+    <value>CONFIGURA I PARAMETRI DI RETE</value>
+  </data>
+  <data name="NetworkConfig_NetworkName" xml:space="preserve">
+    <value>Nome della rete</value>
+  </data>
+  <data name="NetworkConfig_Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="NetworkConfig_Save" xml:space="preserve">
+    <value>Salva</value>
+  </data>
+  <data name="NetworkConfig_Success" xml:space="preserve">
+    <value>Configurazione completata con successo</value>
+  </data>
+  <data name="NetworkConfig_Error" xml:space="preserve">
+    <value>Errore, assicurarsi di essere connessi a internet</value>
+  </data>
+  <data name="GrinderEdit_Grinder" xml:space="preserve">
+    <value>Macinacaffè</value>
+  </data>
+  <data name="GrinderEdit_Disable" xml:space="preserve">
+    <value>DISATTIVA</value>
+  </data>
+  <data name="GrinderEdit_Role" xml:space="preserve">
+    <value>Profilo utente</value>
+  </data>
+  <data name="GrinderEdit_GrinderAdmin" xml:space="preserve">
+    <value>Amministratore macinacaffè</value>
+  </data>
+  <data name="GrinderEdit_Address" xml:space="preserve">
+    <value>indirizzo</value>
+  </data>
+  <data name="GrinderEdit_City" xml:space="preserve">
+    <value>Città</value>
+  </data>
+  <data name="GrinderEdit_RegistrationDate" xml:space="preserve">
+    <value>Data di registrazione</value>
+  </data>
+  <data name="GrinderEdit_ActivationDate" xml:space="preserve">
+    <value>Data di attivazione</value>
+  </data>
+  <data name="GrinderEdit_Description" xml:space="preserve">
+    <value>Descrizione</value>
+  </data>
+  <data name="GrinderEdit_ServiceNumber" xml:space="preserve">
+    <value>Contatto servizio tecnico</value>
+  </data>
+  <data name="GrinderEdit_Ssid" xml:space="preserve">
+    <value>Nome della rete</value>
+  </data>
+  <data name="GrinderEdit_Tag" xml:space="preserve">
+    <value>Tag</value>
+  </data>
+  <data name="GrinderEdit_Country" xml:space="preserve">
+    <value>Stato</value>
+  </data>
+  <data name="GrinderEdit_UserPrivileges" xml:space="preserve">
+    <value>Gestisci privilegi utente</value>
+  </data>
+  <data name="GrinderEdit_WifiCredentials" xml:space="preserve">
+    <value>Imposta parametri WiFi</value>
+  </data>
+  <data name="GrinderEdit_ReplaceBoard" xml:space="preserve">
+    <value>Sostituisci scheda</value>
+  </data>
+  <data name="GrinderEdit_Activate" xml:space="preserve">
+    <value>Attiva</value>
+  </data>
+  <data name="GrinderEdit_RemoveGrinder" xml:space="preserve">
+    <value>Rimuovi macinacaffè</value>
+  </data>
+  <data name="GrinderEdit_Save" xml:space="preserve">
+    <value>Invia modifiche</value>
+  </data>
+  <data name="GrinderEdit_OkAlert" xml:space="preserve">
+    <value>Parametri aggiornati con successo</value>
+  </data>
+  <data name="GrinderEdit_ErrorAlert" xml:space="preserve">
+    <value>Errore, assicurarsi di essere connessi a internet e non alla rete del macinacaffè</value>
+  </data>
+  <data name="GrinderEdit_DeletedAlert" xml:space="preserve">
+    <value>Macinacaffè rimosso. Sarai ridirezzionato al Parco Macchine</value>
+  </data>
+  <data name="GrinderEdit_Ok" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="AddUserPermissions_FindAndAdd" xml:space="preserve">
+    <value>Cerca e aggiungi un utente</value>
+  </data>
+  <data name="AddUserPermissions_FindEmail" xml:space="preserve">
+    <value>email utente</value>
+  </data>
+  <data name="AddUserPermissions_Email" xml:space="preserve">
+    <value>Inserisci l'email di un utente registrato</value>
+  </data>
+  <data name="AddUserPermissions_Role" xml:space="preserve">
+    <value>Ruolo</value>
+  </data>
+  <data name="AddUserPermissions_AddUser" xml:space="preserve">
+    <value>AGGIUNGI UTENTE</value>
+  </data>
+  <data name="AddUserPermissions_UserAdded" xml:space="preserve">
+    <value>Utente aggiunto con successo</value>
+  </data>
+  <data name="AddUserPermissions_Error" xml:space="preserve">
+    <value>Questa mail non è registrata, prego reinserire</value>
+  </data>
+  <data name="GrinderUserPermissions_ErrorTitle" xml:space="preserve">
+    <value>Errore</value>
+  </data>
+  <data name="GrinderUserPermissions_ErrorText" xml:space="preserve">
+    <value>Si è verificato un errore</value>
+  </data>
+  <data name="GrinderUserPermissions_Sure" xml:space="preserve">
+    <value>Confermi la modifica di ruolo per questo utente?</value>
+  </data>
+  <data name="NotActivated_Activation" xml:space="preserve">
+    <value>ATTIVAZIONE</value>
+  </data>
+  <data name="Filter_RemainingBlade" xml:space="preserve">
+    <value>Vita utile macina</value>
+  </data>
+  <data name="Filter_DosesLeft" xml:space="preserve">
+    <value>Dosi mancanti</value>
+  </data>
+  <data name="Filter_SerialNumber" xml:space="preserve">
+    <value>Matricola</value>
+  </data>
+  <data name="Filter_Model" xml:space="preserve">
+    <value>Modello</value>
+  </data>
+  <data name="Filter_Tag" xml:space="preserve">
+    <value>Tag</value>
+  </data>
+  <data name="Filter_MasterUser" xml:space="preserve">
+    <value>Utente Master</value>
+  </data>
+  <data name="Filter_Address" xml:space="preserve">
+    <value>Indirizzo</value>
+  </data>
+  <data name="Filter_City" xml:space="preserve">
+    <value>Città</value>
+  </data>
+  <data name="Filter_Description" xml:space="preserve">
+    <value>Descrizione</value>
+  </data>
+  <data name="Filter_SortBy" xml:space="preserve">
+    <value>Ordina per</value>
+  </data>
+  <data name="Filter_Reset" xml:space="preserve">
+    <value>RESET</value>
+  </data>
+  <data name="Filter_Apply" xml:space="preserve">
+    <value>APPLICARE</value>
+  </data>
+  <data name="Filter_Title" xml:space="preserve">
+    <value>FILTRA I MACINACAFFÈ</value>
+  </data>
+  <data name="Filter_OrderBy" xml:space="preserve">
+    <value>ORDINA PER</value>
+  </data>
+  <data name="Monitoring_Opening" xml:space="preserve">
+    <value>Orario di apertura</value>
+  </data>
+  <data name="Monitoring_Closing" xml:space="preserve">
+    <value>Giorno di chiusura</value>
+  </data>
+  <data name="Monitoring_ViewFullscreen" xml:space="preserve">
+    <value>Visualizza grafico a schermo intero</value>
+  </data>
+  <data name="Monitoring_Today" xml:space="preserve">
+    <value>Oggi</value>
+  </data>
+  <data name="Monitoring_TenDaysAverage" xml:space="preserve">
+    <value>Media su 10 giorni</value>
+  </data>
+  <data name="Monitoring_DoseCounter" xml:space="preserve">
+    <value>Contatore dosi</value>
+  </data>
+  <data name="Monitoring_TotalManualTime" xml:space="preserve">
+    <value>Tempo macinato manualmente oggi</value>
+  </data>
+  <data name="Monitoring_PartialDosesCount" xml:space="preserve">
+    <value>Contatore dosi parziali</value>
+  </data>
+  <data name="Monitoring_DailyAverage10" xml:space="preserve">
+    <value>Media giornaliera su 10 giorni</value>
+  </data>
+  <data name="Monitoring_LastUpdate" xml:space="preserve">
+    <value>Ultimo aggiornamento:</value>
+  </data>
+  <data name="Monitoring_At" xml:space="preserve">
+    <value>Alle</value>
+  </data>
+  <data name="Monitoring_From" xml:space="preserve">
+    <value>Da:</value>
+  </data>
+  <data name="Monitoring_To" xml:space="preserve">
+    <value>A:</value>
+  </data>
+  <data name="Monitoring_TotalDoses" xml:space="preserve">
+    <value>Dosi totali</value>
+  </data>
+  <data name="Monitoring_Ok" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Monitoring_ErrorLogs" xml:space="preserve">
+    <value>Errore nel caricamento dei log</value>
+  </data>
+  <data name="Monitoring_ErrorWeekDay" xml:space="preserve">
+    <value>Errore aggiornamento giorno di chiusura</value>
+  </data>
+  <data name="Monitoring_ErrorHour" xml:space="preserve">
+    <value>Errore aggiornamento orario di apertura</value>
+  </data>
+  <data name="Survey_RateFromTo" xml:space="preserve">
+    <value>VALUTA DA 1 A 5</value>
+  </data>
+  <data name="Survey_Vote" xml:space="preserve">
+    <value>VOTA</value>
+  </data>
+  <data name="Survey_Ok" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Survey_ThankYou" xml:space="preserve">
+    <value>Grazie per aver Votato</value>
+  </data>
+  <data name="Unlock_Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="Unlock_Unlock" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="Unlock_Error" xml:space="preserve">
+    <value>Accertarsi che la password sia corretta e che lo smartphone sia connesso a internet</value>
+  </data>
+  <data name="Rating_SelectedSerial" xml:space="preserve">
+    <value>Seleziona matricole</value>
+  </data>
+  <data name="Rating_Opened" xml:space="preserve">
+    <value>Aperto il</value>
+  </data>
+  <data name="Rating_Closed" xml:space="preserve">
+    <value>Chiuso il</value>
+  </data>
+  <data name="Rating_SurveyTitle" xml:space="preserve">
+    <value>Titolo del sondaggio</value>
+  </data>
+  <data name="Rating_Title" xml:space="preserve">
+    <value>Titolo</value>
+  </data>
+  <data name="Rating_WriteQuestions" xml:space="preserve">
+    <value>Scrivi una domanda</value>
+  </data>
+  <data name="Rating_Question" xml:space="preserve">
+    <value>Domanda</value>
+  </data>
+  <data name="Rating_Start" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="Rating_GoToRating" xml:space="preserve">
+    <value>Vai alla finestra di voto</value>
+  </data>
+  <data name="Rating_Stop" xml:space="preserve">
+    <value>Stop sondaggio</value>
+  </data>
+  <data name="Rating_Restart" xml:space="preserve">
+    <value>Ricomincia raccolta voti</value>
+  </data>
+  <data name="Rating_Reset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="Rating_InsertTitleAndQuestion" xml:space="preserve">
+    <value>Inserisci almeno il titolo e una domanda</value>
+  </data>
+  <data name="Rating_GeneralAverage" xml:space="preserve">
+    <value>Media generale</value>
+  </data>
+  <data name="Firmware_Ok" xml:space="preserve">
+    <value>Ok</value>
+  </data>
+  <data name="Firmware_Stop" xml:space="preserve">
+    <value>Stop</value>
+  </data>
+  <data name="Firmware_Send" xml:space="preserve">
+    <value>INVIA FIRMWARE</value>
+  </data>
+  <data name="Firmware_Running" xml:space="preserve">
+    <value>Trasferimento al macinacaffè in corso, non disconnetersi dal macinacaffè o dalla rete wi-fi</value>
+  </data>
+  <data name="Firmware_Update" xml:space="preserve">
+    <value>FIRMWARE AGGIORNATO</value>
+  </data>
+  <data name="Firmware_Downloading" xml:space="preserve">
+    <value>Scaricare file di aggiornamento</value>
+  </data>
+  <data name="Firmware_Sent" xml:space="preserve">
+    <value>Aggiornamento traferito. Procedi all'installazione dalla pagina Service del menu del macinacaffè</value>
+  </data>
+  <data name="Firmware_ErrorAlertSending" xml:space="preserve">
+    <value>Errore di invio file. Prego riprovare</value>
+  </data>
+  <data name="Firmware_ErrorSending" xml:space="preserve">
+    <value>Errore di invio file</value>
+  </data>
+  <data name="Firmware_DownloadCompleted" xml:space="preserve">
+    <value>Scaricamento completato</value>
+  </data>
+  <data name="Firmware_ErrorAlertDownloading" xml:space="preserve">
+    <value>Errore scaricamento firmware. Prego riprovare</value>
+  </data>
+  <data name="Firmware_ErrorDownloading" xml:space="preserve">
+    <value>Errore scaricamento firmware</value>
+  </data>
+  <data name="Service_LastUpdate" xml:space="preserve">
+    <value>Ultimo aggiornamento:</value>
+  </data>
+  <data name="Service_At" xml:space="preserve">
+    <value>Alle</value>
+  </data>
+  <data name="Service_BatteryOK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Service_BatteryDamaged" xml:space="preserve">
+    <value>DANNEGGIATA</value>
+  </data>
+  <data name="Service_AlertDownloaded" xml:space="preserve">
+    <value>Scaricamento completato con successo. Vuoi trasferire l'aggiornamento al macinacaffè adesso?</value>
+  </data>
+  <data name="Service_LoadFirmware" xml:space="preserve">
+    <value>Traferimento file di aggiornamento</value>
+  </data>
+  <data name="Service_UpdateAvailable" xml:space="preserve">
+    <value>Un aggiornamento Firmware del macinacaffè è disponibile. Vuoi scaricarlo ora nello smartphone?</value>
+  </data>
+  <data name="Service_DownloadFirmware" xml:space="preserve">
+    <value>Scaricamento file di aggiornamento</value>
+  </data>
+  <data name="Service_FirmwareUpdated" xml:space="preserve">
+    <value>Firmware aggiornato</value>
+  </data>
+  <data name="Service_BurrsInfo" xml:space="preserve">
+    <value>INFO MACINE</value>
+  </data>
+  <data name="Service_ManageDosesLimit" xml:space="preserve">
+    <value>GESTISCI LIMITAZIONE DOSI</value>
+  </data>
+  <data name="Service_GrindingManagement" xml:space="preserve">
+    <value>GESTIONE DELLA MACINATURA</value>
+  </data>
+  <data name="Service_Other" xml:space="preserve">
+    <value>ALTRO</value>
+  </data>
+  <data name="Service_LimitDoses" xml:space="preserve">
+    <value>Limita dosi</value>
+  </data>
+  <data name="Service_GrinderShutoff" xml:space="preserve">
+    <value>Blocco macinino</value>
+  </data>
+  <data name="Service_ManaualGrinding" xml:space="preserve">
+    <value>Macinatura manuale</value>
+  </data>
+  <data name="Service_BlockDosingAdjustment" xml:space="preserve">
+    <value>Blocca regolazione dosi</value>
+  </data>
+  <data name="Service_FirmwareVersion" xml:space="preserve">
+    <value>Versione Firmware</value>
+  </data>
+  <data name="Service_BurrsServiceLife" xml:space="preserve">
+    <value>Vita utile macina</value>
+  </data>
+  <data name="Service_LastReplacement" xml:space="preserve">
+    <value>Data di ultima sostituzione</value>
+  </data>
+  <data name="Service_DosesLeft" xml:space="preserve">
+    <value>Dosi rimanenti</value>
+  </data>
+  <data name="Service_LastReplenishment" xml:space="preserve">
+    <value>Data di ultima ricarica</value>
+  </data>
+  <data name="Service_AddDoses" xml:space="preserve">
+    <value>Aggiungi dosi</value>
+  </data>
+  <data name="Service_AddDosesPlaceholder" xml:space="preserve">
+    <value>Aggiungi qui le dosi, massimo 5 cifre</value>
+  </data>
+  <data name="Service_BatteryLife" xml:space="preserve">
+    <value>Vita batteria</value>
+  </data>
+  <data name="Service_ServiceNumber" xml:space="preserve">
+    <value>Contatto servizio tecnico</value>
+  </data>
+  <data name="Service_ServicePassword" xml:space="preserve">
+    <value>Password service</value>
+  </data>
+  <data name="Service_SaveB" xml:space="preserve">
+    <value>Invia modifiche</value>
+  </data>
+  <data name="Service_FirmwareB" xml:space="preserve">
+    <value>Scarica Firmware</value>
+  </data>
+  <data name="Service_Success" xml:space="preserve">
+    <value>Modifiche inviate con successo</value>
+  </data>
+  <data name="Service_Error" xml:space="preserve">
+    <value>Errore, verifica la rete WiFi del macinacaffè</value>
+  </data>
+  <data name="Service_PasswordDigits" xml:space="preserve">
+    <value>La Password deve essere di 4 cifre</value>
+  </data>
+  <data name="Service_DosesDigits" xml:space="preserve">
+    <value>Le dosi devono essere di 5 cifre</value>
+  </data>
+  <data name="Home_OpenMenu" xml:space="preserve">
+    <value>Apri il menu</value>
+  </data>
+  <data name="Home_GoToMyGrinders" xml:space="preserve">
+    <value>Vai al parco macchine</value>
+  </data>
+  <data name="Home_GrinderRegistration" xml:space="preserve">
+    <value>REGISTRAZIONE MACINACAFFÈ</value>
+  </data>
+  <data name="Home_AddFirstGrinder" xml:space="preserve">
+    <value>E aggiungi il tuo primo macinacaffè</value>
+  </data>
+  <data name="Home_GrinderSelection" xml:space="preserve">
+    <value>SELEZIONE MACINACAFFÈ</value>
+  </data>
+  <data name="Home_SelectAGrinder" xml:space="preserve">
+    <value>Seleziona un macinacaffè dalla tua lista</value>
+  </data>
+  <data name="Home_NotConnected" xml:space="preserve">
+    <value>Il macinacaffè non è connesso</value>
+  </data>
+  <data name="Home_NavigateSave" xml:space="preserve">
+    <value>Vuoi salvare le modifiche</value>
+  </data>
+  <data name="Home_AllGrindersSelected" xml:space="preserve">
+    <value>Tutti i macinacaffè selezionati</value>
+  </data>
+  <data name="Home_ChooseAGrinder" xml:space="preserve">
+    <value>Scegli un macinacaffè</value>
+  </data>
+  <data name="Home_Among" xml:space="preserve">
+    <value>tra</value>
+  </data>
+  <data name="Home_Selected" xml:space="preserve">
+    <value>selezionati</value>
+  </data>
+  <data name="HomeNoPermissions" xml:space="preserve">
+    <value>L'accesso a questa sezione è vietato per questo macinacaffè</value>
+  </data>
+  <data name="Plot_Type1" xml:space="preserve">
+    <value>Type 1</value>
+  </data>
+  <data name="Plot_Type2" xml:space="preserve">
+    <value>Type 2</value>
+  </data>
+  <data name="Plot_Type3" xml:space="preserve">
+    <value>Type 3</value>
+  </data>
+  <data name="Plot_Total" xml:space="preserve">
+    <value>Totale</value>
+  </data>
+  <data name="Plot_LastUpdate" xml:space="preserve">
+    <value>Ultimo aggiornamento:</value>
+  </data>
+  <data name="Plot_Survey" xml:space="preserve">
+    <value>Sondaggio</value>
+  </data>
+  <data name="Plot_Votes" xml:space="preserve">
+    <value>VOTI</value>
+  </data>
+  <data name="Plot_Period" xml:space="preserve">
+    <value>Periodo</value>
+  </data>
+  <data name="Plot_SerialNumbers" xml:space="preserve">
+    <value>Matricola</value>
+  </data>
+  <data name="Plot_QuestionText" xml:space="preserve">
+    <value>Testo della domanda</value>
+  </data>
+  <data name="Plot_GeneralAverage" xml:space="preserve">
+    <value>Media generale</value>
+  </data>
+  <data name="Plot_VoteCount" xml:space="preserve">
+    <value>Numero di voti</value>
+  </data>
+  <data name="UpdateUser_UpdateProfile" xml:space="preserve">
+    <value>AGGIORNA PROFILO</value>
+  </data>
+  <data name="UpdateUser_Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="UpdateUser_ConfirmPassword" xml:space="preserve">
+    <value>Conferma password</value>
+  </data>
+  <data name="UpdateUser_Company" xml:space="preserve">
+    <value>Società</value>
+  </data>
+  <data name="UpdateUser_Mr" xml:space="preserve">
+    <value>Sig.</value>
+  </data>
+  <data name="UpdateUser_Ms" xml:space="preserve">
+    <value>Sig.ra</value>
+  </data>
+  <data name="UpdateUser_Name" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="UpdateUser_Surname" xml:space="preserve">
+    <value>Cognome</value>
+  </data>
+  <data name="UpdateUser_Role" xml:space="preserve">
+    <value>Ruolo aziendale</value>
+  </data>
+  <data name="UpdateUser_Tel" xml:space="preserve">
+    <value>Telefono</value>
+  </data>
+  <data name="UpdateUser_Address" xml:space="preserve">
+    <value>Indirizzo</value>
+  </data>
+  <data name="UpdateUser_Zip" xml:space="preserve">
+    <value>CAP</value>
+  </data>
+  <data name="UpdateUser_City" xml:space="preserve">
+    <value>Città</value>
+  </data>
+  <data name="UpdateUser_Country" xml:space="preserve">
+    <value>Stato</value>
+  </data>
+  <data name="UpdateUser_Activity" xml:space="preserve">
+    <value>Tipo di attività</value>
+  </data>
+  <data name="UpdateUser_Save" xml:space="preserve">
+    <value>Salva modifiche</value>
+  </data>
+  <data name="UpdateUser_Error" xml:space="preserve">
+    <value>Errore</value>
+  </data>
+  <data name="UpdateUser_ErrorOccouredRedirect" xml:space="preserve">
+    <value>Errore, sarai reindirizzato alla pagina principale</value>
+  </data>
+  <data name="UpdateUser_ValidationError" xml:space="preserve">
+    <value>Errore di validazione</value>
+  </data>
+  <data name="UpdateUser_CheckFields" xml:space="preserve">
+    <value>Controlla i campi inseriti</value>
+  </data>
+  <data name="UpdateUser_ErrorOccoured" xml:space="preserve">
+    <value>Errore</value>
+  </data>
+  <data name="UpdateUser_Done" xml:space="preserve">
+    <value>Modifiche inviate, Sarai ridirezzionato al Parco Macchine</value>
+  </data>
+  <data name="PermissionCell_Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="PermissionCell_Activity" xml:space="preserve">
+    <value>Tipo di attività</value>
+  </data>
+  <data name="PermissionCell_UserRole" xml:space="preserve">
+    <value>Ruolo utente</value>
+  </data>
+  <data name="HomeDetail_Grinder" xml:space="preserve">
+    <value>Macinacaffè</value>
+  </data>
+  <data name="Menu_Profile" xml:space="preserve">
+    <value>Profilo</value>
+  </data>
+  <data name="Menu_MyGrinders" xml:space="preserve">
+    <value>Parco Macchine</value>
+  </data>
+  <data name="Menu_Activation" xml:space="preserve">
+    <value>Attivazione</value>
+  </data>
+  <data name="Menu_Settings" xml:space="preserve">
+    <value>Impostazioni</value>
+  </data>
+  <data name="Privacy" xml:space="preserve">
+    <value>Privacy</value>
+  </data>
+  <data name="Tos" xml:space="preserve">
+    <value>ToS</value>
+  </data>
+  <data name="App_Version" xml:space="preserve">
+    <value>Versione App</value>
+  </data>
+  <data name="FAQ" xml:space="preserve">
+    <value>FAQ</value>
+  </data>
+  <data name="Menu_Logout" xml:space="preserve">
+    <value>Logout</value>
+  </data>
+  <data name="Menu_LogoutAlert" xml:space="preserve">
+    <value>Confermi il logout</value>
+  </data>
+  <data name="Menu_Adjustments" xml:space="preserve">
+    <value>REGOLAZIONI</value>
+  </data>
+  <data name="Menu_Statistics" xml:space="preserve">
+    <value>STATISTICHE</value>
+  </data>
+  <data name="Menu_Service" xml:space="preserve">
+    <value>SERVICE</value>
+  </data>
+  <data name="Menu_Survey" xml:space="preserve">
+    <value>SONDAGGIO</value>
+  </data>
+  <data name="PickerWeek_Monday" xml:space="preserve">
+    <value>Lunedì</value>
+  </data>
+  <data name="PickerWeek_Tuesday" xml:space="preserve">
+    <value>Martedì</value>
+  </data>
+  <data name="PickerWeek_Wednesday" xml:space="preserve">
+    <value>Mercoledì</value>
+  </data>
+  <data name="PickerWeek_Thursday" xml:space="preserve">
+    <value>Giovedì</value>
+  </data>
+  <data name="PickerWeek_Friday" xml:space="preserve">
+    <value>Venerdì</value>
+  </data>
+  <data name="PickerWeek_Saturday" xml:space="preserve">
+    <value>Sabato</value>
+  </data>
+  <data name="PickerWeek_Sunday" xml:space="preserve">
+    <value>Domenica</value>
+  </data>
+  <data name="PickerWeek_AllDays" xml:space="preserve">
+    <value>Nessun giorno di chiusura</value>
+  </data>
+  <data name="PickerSorting_Serial" xml:space="preserve">
+    <value>Matricola</value>
+  </data>
+  <data name="PickerSorting_Activation" xml:space="preserve">
+    <value>Attivazione</value>
+  </data>
+  <data name="PickerSorting_DosesLeft" xml:space="preserve">
+    <value>Dosi rimanenti</value>
+  </data>
+  <data name="PickerSorting_RemainingLife" xml:space="preserve">
+    <value>Vita utile macina</value>
+  </data>
+  <data name="PickerRoles_MASTER" xml:space="preserve">
+    <value>MASTER</value>
+  </data>
+  <data name="PickerRoles_MANAGER" xml:space="preserve">
+    <value>MANAGER</value>
+  </data>
+  <data name="PickerRoles_OPERATOR" xml:space="preserve">
+    <value>OPERATORE</value>
+  </data>
+  <data name="PickerRoles_SERVICE" xml:space="preserve">
+    <value>SERVICE</value>
+  </data>
+  <data name="PickerRoles_INSTALLER" xml:space="preserve">
+    <value>INSTALLATORE</value>
+  </data>
+  <data name="PickerActivities_RoastingBusiness" xml:space="preserve">
+    <value>Torrefattore</value>
+  </data>
+  <data name="PickerActivities_CoffeeShop" xml:space="preserve">
+    <value>Esercizio</value>
+  </data>
+  <data name="PickerActivities_CoffeeFranchise" xml:space="preserve">
+    <value>Catena di esercizi</value>
+  </data>
+  <data name="PickerActivities_Distributor" xml:space="preserve">
+    <value>Distributore di attrezzatura</value>
+  </data>
+  <data name="PickerActivities_TechnicalAssistance" xml:space="preserve">
+    <value>Assistenza tecnica</value>
+  </data>
+  <data name="PickerActivities_Other" xml:space="preserve">
+    <value>Altro</value>
+  </data>
+  <data name="Scanner_WrongCode" xml:space="preserve">
+    <value>Il codice scansionato non è nel formato corretto</value>
+  </data>
+  <data name="GrinderUnknown" xml:space="preserve">
+    <value>Il macinacaffè non è mai stato connesso prima. Prego aggiornare la lista parco macchine in modalità di connessione peer-to-peer per scaricare i dati</value>
+  </data>
+  <data name="Settings_Dose1" xml:space="preserve">
+    <value>Dose 1</value>
+  </data>
+  <data name="Settings_Dose2" xml:space="preserve">
+    <value>Dose 2</value>
+  </data>
+  <data name="Settings_Dose3" xml:space="preserve">
+    <value>Dose 3</value>
+  </data>
+  <data name="Settings_Success" xml:space="preserve">
+    <value>Modifiche inviate con successo</value>
+  </data>
+  <data name="Settings_Pause" xml:space="preserve">
+    <value>pausa</value>
+  </data>
+  <data name="Settings_Seconds" xml:space="preserve">
+    <value>secondi</value>
+  </data>
+  <data name="Settings_Error" xml:space="preserve">
+    <value>Errore, Accertarsi che il macinacaffè sia connesso alla stessa rete</value>
+  </data>
+  <data name="Settings_Submit" xml:space="preserve">
+    <value>Invia modifiche</value>
+  </data>
+  <data name="Settings_InvalidParam" xml:space="preserve">
+    <value>Il valore inserito non è valido</value>
+  </data>
+  <data name="Monitoring_GrindingErrors" xml:space="preserve">
+    <value>Errore nei log, tutti i dati corrotti saranno forzati al valore 0</value>
+  </data>
+  <data name="Monitoring_TimePickerOk" xml:space="preserve">
+    <value>Ok</value>
+  </data>
+  <data name="Permissions_Manager" xml:space="preserve">
+    <value>Questo utente può vedere e modificare tuti i dati del macinacaffè. Non può gestire i privilegi utente</value>
+  </data>
+  <data name="Permissions_Service" xml:space="preserve">
+    <value>Questo utente può solamente vedere i dati della sezione "Service" per questo macinacaffè, e può modificare la password del menu service del macinacaffè</value>
+  </data>
+  <data name="Permissions_Operator" xml:space="preserve">
+    <value>Questo utente può vedere tutti i dati del macinacaffè (la password della sezione service non è visibile). Può modificare i parametri solamente nella sezione "Regolazioni" e "Sondaggio"  </value>
+  </data>
+  <data name="Permissions_Installer" xml:space="preserve">
+    <value>Questo utente può solo attivare la connettività del macinacaffè, e aggiornare il firmware</value>
+  </data>
+  <data name="Error_Invalid_Serial_Title" xml:space="preserve">
+    <value>Errore</value>
+  </data>
+  <data name="Error_Invalid_Serial_Message" xml:space="preserve">
+    <value>Matricola non valida per il macinacaffè connesso</value>
+  </data>
+  <data name="Plot_Title" xml:space="preserve">
+    <value>Dosi macinate negli ultimi 10 giorni</value>
+  </data>
+</root>
