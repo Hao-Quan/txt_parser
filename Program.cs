@@ -37,7 +37,6 @@ namespace ExportImport_MazzerTraduzioni
             // example RESX
             string path_dir_resources = @"C:\Users\quan\Documents\project_2023\parser\parser_resources_resx";
 
-
             string column1 = "";
             string column2 = "";
             string[] path_files = Directory.GetFiles(path_dir_resources);
@@ -115,10 +114,6 @@ namespace ExportImport_MazzerTraduzioni
 
                 if (Path.GetExtension(path_file) == ".resx")
                 {
-                    //string resxFile = @"C:\Users\quan\Documents\project_2023\parser\parser_resources_resx\AppResources.it.resx";
-                    //List<Automobile> autos = new List<Automobile>();
-                    //SortedList headers = new SortedList();
-
                     column1 = "Id";
                     dt_columns = dt.Columns;
                     if (!dt_columns.Contains(column1))
