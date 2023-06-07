@@ -16,6 +16,7 @@ using System.Resources;
 using System.Collections;
 using DocumentFormat.OpenXml.Spreadsheet;
 using System.Data.OleDb;
+using DocumentFormat.OpenXml.Office2010.ExcelAc;
 
 namespace ExportImport_MazzerTraduzioni
 {
@@ -39,8 +40,11 @@ namespace ExportImport_MazzerTraduzioni
             string sConnection = null;
             string first_cell = null;
             DataTable dtTablesList = default(DataTable);
-            string id_string;
-            string value_string;
+            string id_string = null;
+            string value_string = null;
+            string[] columnNames = null;
+            DataRow current_row = null;
+            DataRow next_row = null;
 
             OleDbConnection oleExcelConnection = default(OleDbConnection);
 
@@ -125,12 +129,93 @@ namespace ExportImport_MazzerTraduzioni
                 if (first_cell == "Area")
                 {
                     /*Convert EXCEL to JSON*/
+
+                    /* move first row as header columns' names*/
+                    foreach (DataColumn column in dt_excel.Columns)
+                    {
+                        string cName = dt_excel.Rows[0][column.ColumnName].ToString();
+                        if (!dt_excel.Columns.Contains(cName) && cName != "")
+                        {
+                            column.ColumnName = cName;
+                        }
+
+                    }
+                    dt_excel.Rows[0].Delete();
+                    dt_excel.Rows.RemoveAt(0);
+
+                    columnNames = (from dc in dt_excel.Columns.Cast<DataColumn>()
+                                            select dc.ColumnName).ToArray();
+                    // ignore first 2 column names "area", "id", start from only language tags. 
+                    columnNames = columnNames.Skip(2).ToArray();
+
                     dynamic exo = new System.Dynamic.ExpandoObject();
+                    dynamic exo_1 = new System.Dynamic.ExpandoObject();
+
+                    foreach (string languageColumn in columnNames)
+                    {                        
+                        //foreach (DataRow row in dt_excel.Rows)
+                        for (int i = 0; i < dt_excel.Rows.Count - 1; i++)
+                        {
+                            current_row = dt_excel.Rows[i];
+                            next_row = dt_excel.Rows[i + 1];
+
+                            id_string = (string)current_row["Id"];
+                            value_string = null;
+                            if (current_row[languageColumn] == DBNull.Value)
+                            {
+                                value_string = "";
+                            }
+                            else
+                            {
+                                value_string = (string)current_row[languageColumn];
+                            }
+                            // when "Area" is empty
+                            if (current_row["Area"] == DBNull.Value)
+                            {
+                                ((IDictionary<String, Object>)exo).Add(id_string, value_string);
+                            }
+                            // when "Area" is empty, it means it has subobjects
+                            else
+                            {
+                                List<string> listArea = ((string)current_row["Area"]).Split('.').ToList<string>();
+                                //List<string> listArea = ((string)row["Area"]).Split('.').Reverse().ToList<string>();
+                                foreach (string areaElement in listArea)
+                                {                                    
+                                    // the next row record has the same area with the current row
+                                    if ((string)next_row["Area"]==((string)current_row["Area"]))
+                                    {
+                                        ((IDictionary<String, Object>)exo_1).Add(id_string, value_string);
+                                    }
+                                    // the next row record has the different area with the current row, so we can add the subobject to the parent node
+                                    else
+                                    {
+                                        ((IDictionary<String, Object>)exo_1).Add(id_string, value_string);
+                                        ((IDictionary<String, Object>)exo).Add(areaElement, exo_1);
+                                        exo_1 = new System.Dynamic.ExpandoObject();
+                                    }                                    
+                                }
+                                
+
+                            }
+                            //((IDictionary<String, Object>)exo_1).Add("subkey", "subvalore");
+                            //((IDictionary<String, Object>)exo).Add("sotto", exo_1);
+
+                            string e_json = Newtonsoft.Json.JsonConvert.SerializeObject(exo, Formatting.Indented);
+                            var sqq = 2;
+                                  
+                        }
+                        var sss = 1;
+                        Newtonsoft.Json.JsonConvert.SerializeObject(exo);
+                        
+                    }
+
+                    //    dynamic exo = new System.Dynamic.ExpandoObject();
+                    
                     //foreach (string field in fields)
                     //{
                     //    ((IDictionary<String, Object>)exo).Add(field, field + "_data");
                     //}
-                    //var qu = Newtonsoft.Json.JsonConvert.SerializeObject(exo);
+                    
                 }
                 else
                 {
@@ -149,7 +234,7 @@ namespace ExportImport_MazzerTraduzioni
                     dt_excel.Rows[0].Delete();
                     dt_excel.Rows.RemoveAt(0);
 
-                    string[] columnNames = (from dc in dt_excel.Columns.Cast<DataColumn>()
+                    columnNames = (from dc in dt_excel.Columns.Cast<DataColumn>()
                                             select dc.ColumnName).ToArray();
                     // ignore first column name "id", start from only language tags. 
                     columnNames = columnNames.Skip(1).ToArray();
@@ -191,6 +276,11 @@ namespace ExportImport_MazzerTraduzioni
                 oleExcelConnection.Close();
             }
             
+        }
+
+        public static void RecursiveParseToJson(string area, string id, string lang)
+        {
+
         }
 
         public static void ToExcel()
