@@ -33,7 +33,7 @@ namespace ExportImport_MazzerTraduzioni
             //string file = args[0];
 
             // example JSON
-            //string path_dir_resources = @"C:\Users\quan\Documents\project_2023\parser\parser_resources_json";            
+            //string path_dir_resources = @"C:\Users\quan\Documents\project_2023\parser\parser_resources_json";
             // example RESX
             string path_dir_resources = @"C:\Users\quan\Documents\project_2023\parser\parser_resources_resx";
 
@@ -42,7 +42,7 @@ namespace ExportImport_MazzerTraduzioni
             string[] path_files = Directory.GetFiles(path_dir_resources);
             string jsonInput;
             string? languague_suffix;
-            string column_name = "";
+            string? column_name = "";
             bool contains = false;
             List<Item> data;
             DataTable dt;
@@ -58,23 +58,21 @@ namespace ExportImport_MazzerTraduzioni
                 {
                     column1 = "Area";
                     column2 = "Id";
-                    dt.Columns.Add(column1, typeof(string));
-                    dt.Columns.Add(column2, typeof(string));
-                    
+
+                    dt_columns = dt.Columns;
+                    if (dt_columns.Contains(column1) == false && dt_columns.Contains(column2) == false)
+                    {
+                        dt.Columns.Add(column1, typeof(string));
+                        dt.Columns.Add(column2, typeof(string));
+
+                    }
+
                     // get langugae suffix from file name, e.g., "it", "en", "es", etc.
                     languague_suffix = path_file.Split('\\').Last();
                     languague_suffix = languague_suffix.Split('.')[0];
-                    languague_suffix = languague_suffix.Split('_')[1];
-
-                    switch (languague_suffix)
-                    {
-                        case "it":
-                            column_name = "Italiano/IT(it)";
-                            break;
-                        case "en":
-                            column_name = "English/EN(en)";
-                            break;
-                    }
+                    languague_suffix = languague_suffix.Split('_')[1];                    
+                    column_name = languague_suffix;
+                    
                     // add new language column
                     dt.Columns.Add(column_name, typeof(string));
 
@@ -129,20 +127,12 @@ namespace ExportImport_MazzerTraduzioni
                         }
 
                         foreach (DictionaryEntry entry in resxReader)
-                        {                              
+                        {                                                          
                             if ((string?)entry.Key == "Language")
                             {
-                                languague_suffix = (string?)entry.Value;                       
-
-                                switch (languague_suffix)
-                                {
-                                    case "it":
-                                        column_name = "Italiano/IT(it)";
-                                        break;
-                                    case "en":
-                                        column_name = "English/EN(en)";
-                                        break;
-                                }
+                                languague_suffix = (string?)entry.Value;
+                                column_name = languague_suffix;
+                                
                                 // add new language column
                                 dt.Columns.Add(column_name, typeof(string));
                             }
@@ -150,10 +140,13 @@ namespace ExportImport_MazzerTraduzioni
                             contains = dt.AsEnumerable().Any(row => (string)entry.Key == row.Field<String>("Id"));
                             if (contains == false)
                             {
-                                DataRow newRow = dt.NewRow();
-                                newRow[column1] = (string)entry.Key;
-                                newRow[column_name] = (string?)entry.Value;
-                                dt.Rows.Add(newRow);
+                                if ((string)entry.Key != "Language")
+                                {
+                                    DataRow newRow = dt.NewRow();
+                                    newRow[column1] = (string)entry.Key;
+                                    newRow[column_name] = (string?)entry.Value;
+                                    dt.Rows.Add(newRow);
+                                }                                
                             }
                             else
                             {
@@ -169,7 +162,7 @@ namespace ExportImport_MazzerTraduzioni
                     }                    
                 }
             }
-                       
+            //TO DO JSON > EXCEL
             XLWorkbook wb = new XLWorkbook();
             wb.Worksheets.Add(dt, "translate_mapping");
             string xlsPath = @"C:\Users\quan\Documents\project_2023\parser\parser_output\webapp.xlsx";
