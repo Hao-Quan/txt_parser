@@ -15,6 +15,7 @@ using System.Windows.Forms;
 using System.Resources;
 using System.Collections;
 using DocumentFormat.OpenXml.Spreadsheet;
+using System.Data.OleDb;
 
 namespace ExportImport_MazzerTraduzioni
 {
@@ -23,6 +24,176 @@ namespace ExportImport_MazzerTraduzioni
     class Program
     {       
         static void Main(string[] args)
+        {
+            //ToExcel();
+            ToOriginalFile();
+        }
+
+        public static void ToOriginalFile()
+        {
+            string path_dir_resources = @"C:\Users\quan\Documents\project_2023\parser\parser_resources_excel";
+            string path_output_original_files = @"C:\Users\quan\Documents\project_2023\parser\parser_output_original_files";
+            Directory.CreateDirectory(path_output_original_files);
+            string[] path_files = Directory.GetFiles(path_dir_resources);
+            string sSheetName = null;
+            string sConnection = null;
+            string first_cell = null;
+            DataTable dtTablesList = default(DataTable);
+            string id_string;
+            string value_string;
+
+            OleDbConnection oleExcelConnection = default(OleDbConnection);
+
+            foreach (string path_file in path_files)
+            {
+                if (Path.GetExtension(path_file) != ".xlsx")
+                {
+                    continue;
+                }
+                sConnection = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + path_file + ";" + "Extended Properties=\"Excel 12.0;HDR=No;IMEX=1\"";
+                //sConnection = "Provider=Microsoft.ACE.OLEDB.16.0;Data Source=" + path_file + ";" + "Extended Properties=\"Excel 12.0;HDR=No;IMEX=1\"";
+                oleExcelConnection = new OleDbConnection(sConnection);
+                oleExcelConnection.Open();
+
+                dtTablesList = oleExcelConnection.GetSchema("Tables");
+
+                if (dtTablesList.Rows.Count > 0)
+                {
+                    sSheetName = dtTablesList.Rows[0]["TABLE_NAME"].ToString();
+                }
+
+                dtTablesList.Clear();
+                dtTablesList.Dispose();
+
+
+                if (string.IsNullOrEmpty(sSheetName) == true)
+                {
+                    continue;
+                }
+
+                /*Just for read excel */
+                //OleDbCommand oleExcelCommand = default(OleDbCommand);
+                //OleDbDataReader oleExcelReader = default(OleDbDataReader);
+                //oleExcelCommand = oleExcelConnection.CreateCommand();
+                //oleExcelCommand.CommandText = "Select * From [" + sSheetName + "]";
+                //oleExcelCommand.CommandType = CommandType.Text;
+                //oleExcelReader = oleExcelCommand.ExecuteReader();
+                //int nOutputRow = 0;
+                //while (oleExcelReader.Read())
+                //{
+                //    var row1Col0 = oleExcelReader[1];
+                //    Console.WriteLine(row1Col0);
+                //}
+                //oleExcelReader.Close();
+
+
+
+                //dynamic product = new JObject();
+                //product.ProductName = "Elbow Grease";
+                //product.Enabled = true;
+                //product.Price = 4.90m;
+                //product.StockCount = 9000;
+                //product.StockValue = 44100;
+                //product.Tags = new JArray("Real", "OnSale");
+
+                //string id = "title";
+                //product.id = 44100;
+
+                //Console.WriteLine(product.ToString());
+
+
+                // my pretend dataset
+                //List<string> fields = new List<string>();
+                //// my 'columns'
+                //fields.Add("this_thing");
+                //fields.Add("that_thing");
+                //fields.Add("the_other");               
+
+                /*Read excel and store into datatable */
+                //oleExcelConnection.GetOleDbSchemaTable();
+
+                DataSet ds = new DataSet();
+                //ds.Tables[0].Columns[0].MaxLength = 
+                string sqlquery = "Select * From [" + sSheetName + "]";                
+                OleDbDataAdapter da = new OleDbDataAdapter(sqlquery, sConnection);
+                da.Fill(ds);
+                DataTable dt_excel = ds.Tables[0];
+
+                //int s = ds.Tables[0].Columns[1].MaxLength;
+
+                first_cell = (string)dt_excel.Rows[0][0];
+                if (first_cell == "Area")
+                {
+                    /*Convert EXCEL to JSON*/
+                    dynamic exo = new System.Dynamic.ExpandoObject();
+                    //foreach (string field in fields)
+                    //{
+                    //    ((IDictionary<String, Object>)exo).Add(field, field + "_data");
+                    //}
+                    //var qu = Newtonsoft.Json.JsonConvert.SerializeObject(exo);
+                }
+                else
+                {
+                    /*Convert EXCEL to RESX*/
+
+                    /* move first row as header columns' names*/
+                    foreach (DataColumn column in dt_excel.Columns)
+                    {
+                        string cName = dt_excel.Rows[0][column.ColumnName].ToString();
+                        if (!dt_excel.Columns.Contains(cName) && cName != "")
+                        {
+                            column.ColumnName = cName;
+                        }
+
+                    }
+                    dt_excel.Rows[0].Delete();
+                    dt_excel.Rows.RemoveAt(0);
+
+                    string[] columnNames = (from dc in dt_excel.Columns.Cast<DataColumn>()
+                                            select dc.ColumnName).ToArray();
+                    // ignore first column name "id", start from only language tags. 
+                    columnNames = columnNames.Skip(1).ToArray();
+
+                    ResXResourceWriter resx = null;
+                    
+                    foreach (string languageColumn in columnNames)
+                    {
+                        // TODO: change output file with dynamic names: en, it, es. 
+                        resx = new ResXResourceWriter(Path.Combine(path_output_original_files, "AppResources." + languageColumn + ".resx"));
+                        resx.AddResource("Language", languageColumn);
+
+                        foreach (DataRow row in dt_excel.Rows)
+                        {                            
+                            id_string = (string)row["Id"];
+                            value_string = null;
+                            if (row[languageColumn] == DBNull.Value)
+                            {
+                                value_string = "";
+                            }
+                            else
+                            {
+                                value_string = (string)row[languageColumn];
+                            }
+
+                            //if (id_string == "PolicyViewController_Text")
+                            //{
+                            //    int yy = 1;
+                            //}
+
+                            resx.AddResource(id_string, value_string);
+                        }
+                        // Important to close the WRITER, otherwise it will raise error
+                        resx.Close();
+                    }
+
+
+                }                                               
+                oleExcelConnection.Close();
+            }
+            
+        }
+
+        public static void ToExcel()
         {
             //if (args.Length == 0)
             //{
@@ -36,7 +207,6 @@ namespace ExportImport_MazzerTraduzioni
             //string path_dir_resources = @"C:\Users\quan\Documents\project_2023\parser\parser_resources_json";
             // example RESX
             string path_dir_resources = @"C:\Users\quan\Documents\project_2023\parser\parser_resources_resx";
-
             string column1 = "";
             string column2 = "";
             string[] path_files = Directory.GetFiles(path_dir_resources);
@@ -53,7 +223,7 @@ namespace ExportImport_MazzerTraduzioni
             dt = new DataTable();
 
             foreach (string path_file in path_files)
-            {                
+            {
                 if (Path.GetExtension(path_file) == ".json")
                 {
                     column1 = "Area";
@@ -70,9 +240,9 @@ namespace ExportImport_MazzerTraduzioni
                     // get langugae suffix from file name, e.g., "it", "en", "es", etc.
                     languague_suffix = path_file.Split('\\').Last();
                     languague_suffix = languague_suffix.Split('.')[0];
-                    languague_suffix = languague_suffix.Split('_')[1];                    
+                    languague_suffix = languague_suffix.Split('_')[1];
                     column_name = languague_suffix;
-                    
+
                     // add new language column
                     dt.Columns.Add(column_name, typeof(string));
 
@@ -84,7 +254,7 @@ namespace ExportImport_MazzerTraduzioni
                         continue;
 
                     foreach (Item item in data)
-                    {   
+                    {
                         // check whether the specific pair <area, id> already exists in the data table
                         contains = dt.AsEnumerable().Any(row => item.area == row.Field<String>("Area") && item.key == row.Field<String>("Id"));
                         // if the pair <area, id> does not exist in the data table, insert it values of <area, key, value> as a new row
@@ -98,9 +268,9 @@ namespace ExportImport_MazzerTraduzioni
                         }
                         // if the pair <area, id> exists in the data table, search the row of the pair <area, id>, and add the new language translated record to that row. 
                         else
-                        {                            
+                        {
                             query_res = dt.AsEnumerable()
-                                          .SingleOrDefault(row => row.Field<String>("Area") == item.area && row.Field<String>("Id") == item.key);   
+                                          .SingleOrDefault(row => row.Field<String>("Area") == item.area && row.Field<String>("Id") == item.key);
                             // if find the result, then insert the value
                             if (query_res != null)
                             {
@@ -127,12 +297,12 @@ namespace ExportImport_MazzerTraduzioni
                         }
 
                         foreach (DictionaryEntry entry in resxReader)
-                        {                                                          
+                        {
                             if ((string?)entry.Key == "Language")
                             {
                                 languague_suffix = (string?)entry.Value;
                                 column_name = languague_suffix;
-                                
+
                                 // add new language column
                                 dt.Columns.Add(column_name, typeof(string));
                             }
@@ -146,7 +316,7 @@ namespace ExportImport_MazzerTraduzioni
                                     newRow[column1] = (string)entry.Key;
                                     newRow[column_name] = (string?)entry.Value;
                                     dt.Rows.Add(newRow);
-                                }                                
+                                }
                             }
                             else
                             {
@@ -159,16 +329,16 @@ namespace ExportImport_MazzerTraduzioni
                                 }
                             }
                         }
-                    }                    
+                    }
                 }
             }
-            //TO DO JSON > EXCEL
+
             XLWorkbook wb = new XLWorkbook();
             wb.Worksheets.Add(dt, "translate_mapping");
             string xlsPath = @"C:\Users\quan\Documents\project_2023\parser\parser_output\webapp.xlsx";
-            wb.SaveAs(xlsPath);          
+            wb.SaveAs(xlsPath);
 
-            //string fileName = "WorksheetName_" + DateTime.Now.ToLongTimeString() + ".xlsx";
+            string fileName = "WorksheetName_" + DateTime.Now.ToLongTimeString() + ".xlsx";
         }
 
         static public List<Item> JsonParser(string json)
@@ -241,6 +411,12 @@ namespace ExportImport_MazzerTraduzioni
         public class Item
         {
             public string area;
+            public string key;
+            public string value;
+        }
+
+        public class Item_Resx
+        {
             public string key;
             public string value;
         }
