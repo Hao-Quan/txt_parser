@@ -27,8 +27,8 @@ namespace ExportImport_MazzerTraduzioni
     {       
         static void Main(string[] args)
         {
-            //ToExcel();
-            ToOriginalFile();
+            ToExcel();
+            //ToOriginalFile();
         }
 
         public static void ToOriginalFile()
@@ -62,7 +62,7 @@ namespace ExportImport_MazzerTraduzioni
                     continue;
                 }
 
-                /*START ACE.OLEDB read EXCEL */
+                /*START ACE.OLEDB read EXCEL (have 255 characters limitation)*/
                 /*
                 //sConnection = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + path_file + ";" + "Extended Properties=\"Excel 12.0;HDR=No;IMEX=1\"";
                 sConnection = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + path_file + ";" + "Extended Properties=\"Excel 12.0;HDR=No;IMEX=1;ImportMixedTypes=Text;TypeGuessRows=0;\"";
@@ -96,6 +96,7 @@ namespace ExportImport_MazzerTraduzioni
                 */
                 /*END ACE.OLEDB read EXCEL */
 
+                /* Excel data reader FOR avoiding 255 caratteri limitation */
                 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
                 FileStream stream = File.Open(path_file, FileMode.Open, FileAccess.Read);
                 IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(stream);
@@ -317,11 +318,6 @@ namespace ExportImport_MazzerTraduzioni
             }
         }
 
-        public static void RecursiveParseToJson(string area, string id, string lang)
-        {
-
-        }
-
         public static void ToExcel()
         {
             //if (args.Length == 0)
@@ -333,9 +329,9 @@ namespace ExportImport_MazzerTraduzioni
             //string file = args[0];
 
             // example JSON
-            //string path_dir_resources = @"C:\Users\quan\Documents\project_2023\parser\parser_resources_json";
+            string path_dir_resources = @"C:\Users\quan\Documents\project_2023\parser\parser_resources_json";
             // example RESX
-            string path_dir_resources = @"C:\Users\quan\Documents\project_2023\parser\parser_resources_resx";
+            //string path_dir_resources = @"C:\Users\quan\Documents\project_2023\parser\parser_resources_resx";
             string column1 = "";
             string column2 = "";
             string[] path_files = Directory.GetFiles(path_dir_resources);
@@ -519,10 +515,15 @@ namespace ExportImport_MazzerTraduzioni
                 else
                 {
                     string str = innerItem.Parent.ToString();
-                    string innerkey = str.Substring(0, str.LastIndexOf(':'));
+
+                    //int pp = str.(':');
+
+                    //string innerkey = str.Substring(0, str.LastIndexOf(':'));
+                    string innerkey = str.Substring(0, str.IndexOf(':'));
                     innerkey = innerkey.Replace(" ", string.Empty);
                     innerkey = innerkey.Replace(@"""", string.Empty);
-                    string innerValue = str.Substring(str.LastIndexOf(':') + 2);
+                    //string innerValue = str.Substring(str.LastIndexOf(':') + 2);
+                    string innerValue = str.Substring(str.IndexOf(':') + 2);
                     innerValue = innerValue.Replace(@"""", string.Empty);
 
                     Item record = new Item();
