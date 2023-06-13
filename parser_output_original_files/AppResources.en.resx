@@ -266,7 +266,7 @@
     <value>Termini di servizio </value>
   </data>
   <data name="PolicyViewController_Text" xml:space="preserve">
-    <value>Registrando questo macinacaffè, si dichiare di eserne il proprietario oppure di avere l'autorizzazione del proprietario di accedere alle informazioni del macinacaffè attraverso l'APP, in accordo con i termini di servizio e i relativi aggiornamenti, acQWER</value>
+    <value>Registrando questo macinacaffè, si dichiare di eserne il proprietario oppure di avere l'autorizzazione del proprietario di accedere alle informazioni del macinacaffè attraverso l'APP, in accordo con i termini di servizio e i relativi aggiornamenti, accessibili dal menu sotto la voce "impostazioni"</value>
   </data>
   <data name="PolicyViewController_Accept" xml:space="preserve">
     <value>Ok</value>

@@ -17,6 +17,7 @@ using System.Collections;
 using DocumentFormat.OpenXml.Spreadsheet;
 using System.Data.OleDb;
 using DocumentFormat.OpenXml.Office2010.ExcelAc;
+using ExcelDataReader;
 
 namespace ExportImport_MazzerTraduzioni
 {
@@ -48,13 +49,24 @@ namespace ExportImport_MazzerTraduzioni
 
             OleDbConnection oleExcelConnection = default(OleDbConnection);
 
+            //FileStream stream = File.Open(strFileName, FileMode.Open, FileAccess.Read);
+            //IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(stream);
+            //DataSet result = excelReader.AsDataSet();
+            //excelReader.Close();
+            //return result.Tables[0];
+
             foreach (string path_file in path_files)
             {
                 if (Path.GetExtension(path_file) != ".xlsx")
                 {
                     continue;
                 }
-                sConnection = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + path_file + ";" + "Extended Properties=\"Excel 12.0;HDR=No;IMEX=1\"";
+
+                /*START ACE.OLEDB read EXCEL */
+                /*
+                //sConnection = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + path_file + ";" + "Extended Properties=\"Excel 12.0;HDR=No;IMEX=1\"";
+                sConnection = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + path_file + ";" + "Extended Properties=\"Excel 12.0;HDR=No;IMEX=1;ImportMixedTypes=Text;TypeGuessRows=0;\"";
+
                 //sConnection = "Provider=Microsoft.ACE.OLEDB.16.0;Data Source=" + path_file + ";" + "Extended Properties=\"Excel 12.0;HDR=No;IMEX=1\"";
                 oleExcelConnection = new OleDbConnection(sConnection);
                 oleExcelConnection.Open();
@@ -75,55 +87,21 @@ namespace ExportImport_MazzerTraduzioni
                     continue;
                 }
 
-                /*Just for read excel */
-                //OleDbCommand oleExcelCommand = default(OleDbCommand);
-                //OleDbDataReader oleExcelReader = default(OleDbDataReader);
-                //oleExcelCommand = oleExcelConnection.CreateCommand();
-                //oleExcelCommand.CommandText = "Select * From [" + sSheetName + "]";
-                //oleExcelCommand.CommandType = CommandType.Text;
-                //oleExcelReader = oleExcelCommand.ExecuteReader();
-                //int nOutputRow = 0;
-                //while (oleExcelReader.Read())
-                //{
-                //    var row1Col0 = oleExcelReader[1];
-                //    Console.WriteLine(row1Col0);
-                //}
-                //oleExcelReader.Close();
-
-
-
-                //dynamic product = new JObject();
-                //product.ProductName = "Elbow Grease";
-                //product.Enabled = true;
-                //product.Price = 4.90m;
-                //product.StockCount = 9000;
-                //product.StockValue = 44100;
-                //product.Tags = new JArray("Real", "OnSale");
-
-                //string id = "title";
-                //product.id = 44100;
-
-                //Console.WriteLine(product.ToString());
-
-
-                // my pretend dataset
-                //List<string> fields = new List<string>();
-                //// my 'columns'
-                //fields.Add("this_thing");
-                //fields.Add("that_thing");
-                //fields.Add("the_other");               
-
-                /*Read excel and store into datatable */
-                //oleExcelConnection.GetOleDbSchemaTable();
-
                 DataSet ds = new DataSet();
-                //ds.Tables[0].Columns[0].MaxLength = 
-                string sqlquery = "Select * From [" + sSheetName + "]";                
+                string sqlquery = "Select * From [" + sSheetName + "]";
+                //string sqlquery = "Select * From [" + sSheetName + "A1:C340]";
                 OleDbDataAdapter da = new OleDbDataAdapter(sqlquery, sConnection);
                 da.Fill(ds);
                 DataTable dt_excel = ds.Tables[0];
+                */
+                /*END ACE.OLEDB read EXCEL */
 
-                //int s = ds.Tables[0].Columns[1].MaxLength;
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+                FileStream stream = File.Open(path_file, FileMode.Open, FileAccess.Read);
+                IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(stream);
+                DataSet ds = excelReader.AsDataSet();                
+                DataTable dt_excel = ds.Tables[0];
+                
 
                 first_cell = (string)dt_excel.Rows[0][0];
                 if (first_cell == "Area")
@@ -148,6 +126,16 @@ namespace ExportImport_MazzerTraduzioni
                     // ignore first 2 column names "area", "id", start from only language tags. 
                     columnNames = columnNames.Skip(2).ToArray();
 
+
+                    // get "area" has > 1 sub-subjects
+                    //for (int i = 0; i < dt_excel.Rows.Count - 1; i++)
+                    //{
+                    //    if dt_excel.Rows[i]
+                    //}
+
+                    //string s = dt_excel.AsEnumerable().Select(r => r.Field<string>("id")).Distinct().ToList();
+
+
                     dynamic exo = new System.Dynamic.ExpandoObject();
                     dynamic exo_1 = new System.Dynamic.ExpandoObject();
 
@@ -159,6 +147,7 @@ namespace ExportImport_MazzerTraduzioni
                             current_row = dt_excel.Rows[i];
                             next_row = dt_excel.Rows[i + 1];
 
+                            /* get current <id, value> pair*/
                             id_string = (string)current_row["Id"];
                             value_string = null;
                             if (current_row[languageColumn] == DBNull.Value)
@@ -169,32 +158,63 @@ namespace ExportImport_MazzerTraduzioni
                             {
                                 value_string = (string)current_row[languageColumn];
                             }
-                            // when "Area" is empty
+
+                            // when "Area" is empty, not subobjects
                             if (current_row["Area"] == DBNull.Value)
                             {
                                 ((IDictionary<String, Object>)exo).Add(id_string, value_string);
                             }
-                            // when "Area" is empty, it means it has subobjects
-                            else
+
+                            /* when "Area" is NOT empty, it means it has subobjects*/
+
+                            /* just manage 1 level of subobject case*/
+                            else if (((string)current_row["Area"]).Split('.').Length == 1)
                             {
+                                exo_1 = new System.Dynamic.ExpandoObject();
                                 List<string> listArea = ((string)current_row["Area"]).Split('.').ToList<string>();
                                 //List<string> listArea = ((string)row["Area"]).Split('.').Reverse().ToList<string>();
                                 foreach (string areaElement in listArea)
-                                {                                    
-                                    // the next row record has the same area with the current row
-                                    if ((string)next_row["Area"]==((string)current_row["Area"]))
+                                {
+                                    // the next row record has the same area with the current row, add pairs to the same subobject "exo_1"
+                                    if ((string)next_row["Area"] == ((string)current_row["Area"]))
                                     {
                                         ((IDictionary<String, Object>)exo_1).Add(id_string, value_string);
                                     }
-                                    // the next row record has the different area with the current row, so we can add the subobject to the parent node
+                                    // the next row record has the different area with the current row, so we can add the subobject "exo_1" to the parent node "exo"
+                                    else
+                                    {
+                                        ((IDictionary<String, Object>)exo_1).Add(id_string, value_string);
+                                        ((IDictionary<String, Object>)exo).Add(areaElement, exo_1);
+                                        // clean the first subobject contents
+                                        exo_1 = new System.Dynamic.ExpandoObject();
+                                    }
+                                }
+
+                            }
+                            /* try to manage multiple subobject levels */
+                            else if (((string)current_row["Area"]).Split('.').Length > 1)
+                            {
+                                List<string> listArea = ((string)current_row["Area"]).Split('.').ToList<string>();
+                                //List<string> listArea = ((string)row["Area"]).Split('.').Reverse().ToList<string>();
+                                int cnt_subobj = listArea.Count;
+                                //RecursiveParseExcelToJson(listArea, id_string, value_string);
+
+                                foreach (string areaElement in listArea)
+                                {
+                                    // the next row record has the same area with the current row, add pairs to the same subobject "exo_1"
+                                    if ((string)next_row["Area"] == ((string)current_row["Area"]) && (listArea.Count == 1))
+                                    {
+                                        ((IDictionary<String, Object>)exo_1).Add(id_string, value_string);
+                                    }
+                                    // the next row record has the different area with the current row, so we can add the subobject "exo_1" to the parent node "exo"
                                     else
                                     {
                                         ((IDictionary<String, Object>)exo_1).Add(id_string, value_string);
                                         ((IDictionary<String, Object>)exo).Add(areaElement, exo_1);
                                         exo_1 = new System.Dynamic.ExpandoObject();
-                                    }                                    
+                                    }
                                 }
-                                
+                            }                                
 
                             }
                             //((IDictionary<String, Object>)exo_1).Add("subkey", "subvalore");
@@ -207,7 +227,7 @@ namespace ExportImport_MazzerTraduzioni
                         var sss = 1;
                         Newtonsoft.Json.JsonConvert.SerializeObject(exo);
                         
-                    }
+                    
 
                     //    dynamic exo = new System.Dynamic.ExpandoObject();
                     
@@ -272,10 +292,29 @@ namespace ExportImport_MazzerTraduzioni
                     }
 
 
-                }                                               
-                oleExcelConnection.Close();
+                }
+
+                /* close ACE.OLEDB connection*/
+                //oleExcelConnection.Close();
+
+                /*close excel reader stream*/
+                excelReader.Close();
             }
             
+        }
+
+        public static void RecursiveParseExcelToJson(List<string> lstA, string idstr, string valuestr)
+        {
+            dynamic exo_recursive = new System.Dynamic.ExpandoObject();
+            if (lstA.Count == 1)
+            {
+                ((IDictionary<String, Object>)exo_recursive).Add(idstr, valuestr);
+            }
+            else
+            {   
+                lstA.RemoveAt(0);
+                RecursiveParseExcelToJson(lstA, idstr, valuestr);
+            }
         }
 
         public static void RecursiveParseToJson(string area, string id, string lang)
