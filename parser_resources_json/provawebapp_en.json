@@ -256,7 +256,8 @@
           "requestClosed": "La richiesta è stata chiusa con successo!",
           "confirmButton": "Conferma"
         }
-      }
+      },
+      "quan": "hao"
     },
     "logsTable": {
       "user": "Utente",
