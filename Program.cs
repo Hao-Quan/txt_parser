@@ -19,6 +19,7 @@ using System.Data.OleDb;
 using DocumentFormat.OpenXml.Office2010.ExcelAc;
 using ExcelDataReader;
 using DocumentFormat.OpenXml.Wordprocessing;
+using System.Reflection;
 
 namespace ExportImport_MazzerTraduzioni
 {
@@ -156,6 +157,9 @@ namespace ExportImport_MazzerTraduzioni
                     dt_lookuptab_label.Columns.Add("level", typeof(Int32));                    
                     dt_lookuptab_label.Columns.Add("label");
                     dt_lookuptab_label.Columns.Add("label_complete");
+                    dt_lookuptab_label.Columns.Add("num_subpair", typeof(Int32));
+                    dt_lookuptab_label.Columns.Add("num_subobject", typeof(Int32));
+
 
                     DataTable dt_lookuptab_pair = new DataTable();
                     column = new DataColumn("pair_id");
@@ -198,8 +202,7 @@ namespace ExportImport_MazzerTraduzioni
                                 dr_support = dt_support.NewRow();
                                 flagSameFirstArea = false;
                             }
-                        }    
-                            
+                        }                                
                     }                    
 
                     dynamic exo = new System.Dynamic.ExpandoObject();
@@ -274,6 +277,8 @@ namespace ExportImport_MazzerTraduzioni
                                 DataRow row_tb_lable = dt_lookuptab_label.NewRow();
                                 row_tb_lable["level"] = 0;
                                 row_tb_lable["label"] = ((string)current_row["Area"]).Split('.')[0];
+                                /*only set for level 0 */
+                                row_tb_lable["label_complete"] = ((string)current_row["Area"]).Split('.')[0];
                                 dt_lookuptab_label.Rows.Add(row_tb_lable);
 
                                 DataRow? row_tb_pair = null;
@@ -283,7 +288,7 @@ namespace ExportImport_MazzerTraduzioni
                                 int currentSubObj_startIdx = (int)dr_currentSubObj["start_idx"];
                                 int currentSubObj_endIdx = (int)dr_currentSubObj["end_idx"];
                                 List<string> splittedArea = new List<string>();
-                                
+
                                 int tot_level = 0;
                                 int current_labelId = -1;
                                 List<DataRow> labels_same_level = new List<DataRow>();
@@ -292,7 +297,7 @@ namespace ExportImport_MazzerTraduzioni
 
                                 /* fill table "dt_lookuptab_label" */
                                 for (int j = currentSubObj_startIdx; j <= currentSubObj_endIdx; j++)
-                                {                                    
+                                {
                                     splittedArea = ((string)dt_excel.Rows[j]["Area"]).Split(".").ToList();
                                     for (int k = 0; k < splittedArea.Count; k++)
                                     {
@@ -301,10 +306,10 @@ namespace ExportImport_MazzerTraduzioni
                                             row_tb_lable = dt_lookuptab_label.NewRow();
                                             row_tb_lable["level"] = k;
                                             row_tb_lable["label"] = splittedArea[k];
-                                            row_tb_lable["label_complete"] = (string)dt_excel.Rows[j]["Area"];
+                                            row_tb_lable["label_complete"] = (string)dt_excel.Rows[j]["Area"];                                                                                      
                                             dt_lookuptab_label.Rows.Add(row_tb_lable);
-                                        }                                        
-                                    }                                    
+                                        }
+                                    }
                                 }
 
                                 /* fill table "dt_lookuptab_pair" */
@@ -312,18 +317,249 @@ namespace ExportImport_MazzerTraduzioni
                                 {
                                     row_tb_pair = dt_lookuptab_pair.NewRow();
                                     splittedArea = ((string)dt_excel.Rows[j]["Area"]).Split(".").ToList();
-                                    corrispond_row = dt_lookuptab_label.AsEnumerable().SingleOrDefault(row => row.Field<string>("label") == splittedArea[splittedArea.Count - 1]) ;
+                                    corrispond_row = dt_lookuptab_label.AsEnumerable().SingleOrDefault(row => row.Field<string>("label") == splittedArea[splittedArea.Count - 1]);
                                     row_tb_pair["label_id"] = (int)corrispond_row["label_id"];
                                     row_tb_pair["key"] = dt_excel.Rows[j]["Id"];
                                     row_tb_pair["value"] = dt_excel.Rows[j][languageColumn];
-                                    dt_lookuptab_pair.Rows.Add(row_tb_pair);                                    
+                                    dt_lookuptab_pair.Rows.Add(row_tb_pair);
                                 }
 
+                                /* complete num_subpair and num_subobject columns in "dt_lookuptab_label" by the help of "dt_lookuptab_pair" */
+                                int current_label_id = -1;
+                                int current_num_subpairs = -1;
+                                int current_level_id = -1;
+                                int current_num_subobjects = -1;
+                                string current_complete_label = null;
+                                foreach (DataRow dr_lookuptab_label in dt_lookuptab_label.Rows)
+                                {
+                                    current_label_id = (int)dr_lookuptab_label["label_id"];                                                                      
+                                    current_num_subpairs = dt_lookuptab_pair.AsEnumerable().Count(row => row.Field<int>("label_id") == current_label_id);
+                                    /* 4 means the coloumn of "num_subpair" */
+                                    dt_lookuptab_label.Rows[current_label_id][4] = current_num_subpairs;
+
+                                    current_level_id = (int)dr_lookuptab_label["level"];
+                                    current_complete_label = (string)dr_lookuptab_label["label_complete"];
+                                    current_num_subobjects = dt_lookuptab_label.AsEnumerable().Count(row => row.Field<int>("level") == current_level_id + 1
+                                                                                                            && row.Field<string>("label_complete").ToString().Contains(current_complete_label));
+                                    /* 5 means the coloumn of "num_subobject" */
+                                    dt_lookuptab_label.Rows[current_label_id][5] = current_num_subobjects;
+                                }
+
+
+
+
                                 tot_level = dt_lookuptab_label.AsEnumerable().Max(row => row.Field<int>("level"));
+
+
+                                /* Start: PROVA con cutomized object */
+
+                                //IDictionary<string, Dictionary<string, string>> myDictDict = new Dictionary<string, Dictionary<string, string>>();
+                                //Dictionary<string, string> dict = new Dictionary<string, string>();
+                                //dict.Add("tom", "cat");
+                                //myDictDict.Add("hello", dict);
+
+                                //string json_prova_1 = JsonConvert.SerializeObject(myDictDict, Formatting.Indented);
+
+
+                                //JsonObject mainJsonObj = new JsonObject();
+                                //mainJsonObj.label = "supportUser";
+                                //mainJsonObj.complete_label = "supportUser";
+                                //mainJsonObj.jSubObj_list = new List<JsonObject>();
+                                //mainJsonObj.pairItem_list = new List<Item>();
+
+                                //for (int num_level = 0; num_level <= 3; num_level++)
+                                //{
+
+                                //    for (int num_same_level = 0; num_same_level < dt_lookuptab_label.Select("level = " + 0).ToList().Count(); num_same_level++)
+                                //    {                                    
+
+                                //        // add direct sub (key, value) pairs
+                                //        for (int num_subpair = 0; num_subpair < 2; num_subpair++)
+                                //        {
+                                //            Item newJSubPair = new Item();
+                                //            newJSubPair.key = "ciao";
+                                //            newJSubPair.value = "quan";
+                                //            mainJsonObj.pairItem_list.Add(newJSubPair);
+                                //        }
+
+                                //        // add direct subobjects
+                                //        for (int num_subobj = 0; num_subobj < 2; num_subobj++)
+                                //        {
+                                //            JsonObject newJSubObj = new JsonObject();
+                                //            newJSubObj.label = "requestTable";
+                                //            newJSubObj.complete_label = "SupportUser.requestTable";
+                                //            mainJsonObj.jSubObj_list.Add(newJSubObj);
+                                //        }
+                                //    }
+
+                                //}
+                                //string json_prova = JsonConvert.SerializeObject(mainJsonObj, Formatting.Indented);
+                                /* End: PROVA con cutomized object */
+
+
+                                /* PROVA nested dictionary */
+
+                                //var dictionarys = new Dictionary<string, Object>();
+
+                                //dictionarys.Add("Key1", "1");
+
+                                //var subDict1 =
+                                //        new Dictionary<string, Object>();
+
+                                //subDict1.Add("a", "2");
+                                //subDict1.Add("b", "3");
+
+                                //var subDict2 =
+                                //        new Dictionary<string, Object>();
+                                //subDict2.Add("d", "2");
+                                //subDict2.Add("e", "3");
+
+                                //subDict1.Add("c", subDict2);
+
+                                //dictionarys.Add("Key2", subDict1);
+
+                                //string json_prova_3 = JsonConvert.SerializeObject(dictionarys, Formatting.Indented);
+                                //int pppp = 1;
+
+
+                                var mainDict = new Dictionary<string, Object>();
+                                var subDict = new Dictionary<string, Object>();
+                                for (int num_level = 0; num_level <= 0; num_level++)
+                                {
+                                    for (int num_same_level = 0; num_same_level < 1; num_same_level++)
+                                    //for (int num_same_level = 0; num_same_level < dt_lookuptab_label.Select("level = " + 0).ToList().Count(); num_same_level++)
+                                    {
+
+                                        // add direct sub (key, value) pairs
+                                        for (int num_subpair = 0; num_subpair < 2; num_subpair++)
+                                        {
+                                            subDict.Add("endImpersonation" + num_same_level.ToString()+ num_subpair.ToString(), "Chiudi la Rappresentazione");
+                                        }
+                                        
+
+
+                                        // add direct subobjects
+                                        for (int num_subobj = 0; num_subobj < 2; num_subobj++)
+                                        {
+
+                                            subDict.Add("requestTable" + num_same_level.ToString() + num_subobj.ToString(), new Dictionary<string, Object>());
+                                            //mainDict.Add("endImpersonation" + num_same_level.ToString() + num_subobj.ToString(), subDict);
+
+                                        }
+
+                                        mainDict.Add("supportUser" + num_same_level.ToString(), subDict);
+                                    }
+                                }
                                 
+                                //mainDict["0"]["requestTable01"] = "quan";
+                                mainDict["ciao"] = "hao";
+                                string json_prova_3 = JsonConvert.SerializeObject(mainDict, Formatting.Indented);
+
+
+                            
+
+
+                                var sssss = mainDict.All(f => f.Key.Contains("requestTable"));
+
+                                foreach (object key_dict in mainDict.Keys)
+                                {
+                                    var ttty = key_dict.GetType();
+
+                                    
+                                }
+
+                                var sssq = mainDict.Values.ElementAt(1);
+
+                                foreach (var value_dict in mainDict.Values)
+                                {
+                                    //if ((string)value_dict == "requestTable")
+                                    //{
+                                    //    var ok = key_dict;
+                                    //    //int ooo = 2;
+                                    //}
+
+                                    if (value_dict.GetType() != typeof(String) )
+                                    {
+                                        var current = 1;
+                                            
+                                    }
+
+                                    
+                                }
+
+                                //foreach (PropertyInfo prop  in mainDict.)
+                                //    foreach (var value_dict in mainDict.Values)
+                                //    {
+                                //        if ((string)value_dict == "requestTable")
+                                //        {
+                                //            var ok = key_dict;
+                                //            //int ooo = 2;
+                                //        }
+                                //        int ooo = 2;
+                                //    }
+
+                                int wwww = 1;
+
+                                //IDictionary<string, Dictionary<string, string>> myDc;
+                                //IDictionary<string, Dictionary<string, string>> tempDc;
+                                ////List<Dictionary<string, string>> dc;
+                                //Dictionary<string, string> dc;
+
+                                //myDc = new Dictionary<string, Dictionary<string, string>>();
+
+                                //for (int num_level = 0; num_level <= 0; num_level++)
+                                //{
+                                //    //dc = new List<Dictionary<string, string>>();
+                                //    dc = new Dictionary<string, string>();
+                                //    //for (int num_same_level = 0; num_same_level < dt_lookuptab_label.Select("level = " + 0).ToList().Count(); num_same_level++)
+                                //    for (int num_same_level = 0; num_same_level < 2; num_same_level++)
+                                //    {
+
+                                //        dc.Add("endImpersonation" + num_same_level.ToString(), "Chiudi la Rappresentazione");
+                                //        dc.Add("end" + num_same_level.ToString(), "Chiudi la Rap");
+                                //        myDc.Add("supportUser" + num_same_level.ToString(), dc);
+                                //    }
+                                //}                                
+
+                                //string json_prova_2 = JsonConvert.SerializeObject(myDc, Formatting.Indented);
+
+
+                                //NestedDictionary<string, string> dict = new NestedDictionary<string, string>();
+                                ////dict.value = "ss";
+                                //dict["one"].value = "Nest level 1";
+                                //dict["one"]["two"]["three"].value = "Nest level 3";
+                                ////dict["FieldA"]["FieldB"].Value = "Hello World";
+                                ////dict["FieldA"]["FieldB"]["quan"].Value = "hao";
+                                ////dict["FieldA"]["FieldB"]["quan"].Value = "ciao";
+                                //string json_prova_dict = JsonConvert.SerializeObject(dict, Formatting.Indented);
+
+                                //Dictionary<string, string> dict_v = new Dictionary<string, string>();
+                                //dict_v["1"] = "foo";
+                                //dict_v["2"] = "bar";
+
+                                //var obj = new Dictionary<string, object>()
+                                //                {
+                                //                    {
+                                //                        "components", new Dictionary<string,object>()
+                                //                        {
+                                //                            {
+                                //                                "unit_info" , new Dictionary<string,object>()
+                                //                                {
+                                //                                    { "bla", "blubb" }, {"blubb", "bla" }
+                                //                                }
+                                //                            },
+                                //                            { "ciao", "quan"}
+                                //                        }
+                                //                    }
+                                //                };
+                                //string json_prova_d = JsonConvert.SerializeObject(obj, Formatting.Indented);
+
+                                /*END PROVA*/
+
+
                                 // loop each label level
                                 for (int j = 0; j <= tot_level; j++)
-                                {                                    
+                                    {                                    
                                     labels_same_level = dt_lookuptab_label.Select("level = " + j).ToList();
                                     
                                     // loop the same level has different labels
@@ -713,6 +949,15 @@ namespace ExportImport_MazzerTraduzioni
                 }
             }
         }
+        
+
+        public class JsonObject
+        {
+            public string label { get; set; }
+            public string complete_label { get; set; }
+            public List<Item> pairItem_list { get; set; }
+            public List<JsonObject> jSubObj_list { get ; set; }
+        }
 
         public class Item
         {
@@ -727,6 +972,27 @@ namespace ExportImport_MazzerTraduzioni
             public string value;
         }
 
+
+        //public class NestedDictionary<K, V> : Dictionary<K, NestedDictionary<K, V>>
+        //{
+        //    public V value { set; get; }
+
+        //    public new NestedDictionary<K, V> this[K key]
+        //    {
+        //        set { base[key] = value;
+        //        }
+
+        //        get
+        //        {
+        //            if (!base.Keys.Contains<K>(key))
+        //            {
+        //                base[key] = new NestedDictionary<K, V>();
+        //            }                    
+
+        //            return base[key];
+        //        }
+        //    }
+        //}
     }
 }
 
