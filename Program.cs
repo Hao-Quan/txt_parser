@@ -202,30 +202,6 @@ namespace ExportImport_MazzerTraduzioni
                         if (dt_excel.Rows[i]["Area"] != DBNull.Value)
                         {
                             /* only contains 1 level of subobj*/
-                            //if (((string)dt_excel.Rows[i]["Area"]).Contains(".") == false)
-                            //{
-
-                            //    current_row_label = ((string)dt_excel.Rows[i]["Area"]);
-                            //    if (areaWithUniqueSubObj.Contains(current_row_label) == false)
-                            //    {
-                            //        flagSameArea = false;
-                            //        current_unique_label = current_row_label;
-                            //        areaWithUniqueSubObj.Add(current_unique_label);                                    
-                            //        dr_support_unique_level["area"] = current_unique_label;
-                            //        dr_support_unique_level["start_idx"] = i;                                    
-                            //    }
-                            //    //else if (current_row_label == current_unique_label)
-                            //    else if (areaWithUniqueSubObj.Contains(current_row_label) == true)
-                            //    {
-                            //        flagSameArea = true;
-                            //    }
-                            //    if (current_row_label != current_unique_label)
-                            //    {
-                            //        dr_support_unique_level["end_idx"] = i - 1;
-                            //        dt_support_unique_level.Rows.Add(dr_support_unique_level);
-                            //        dr_support_unique_level = dt_support_unique_level.NewRow();                                    
-                            //    }
-                            //}
 
                             if (((string)dt_excel.Rows[i]["Area"]).Contains(".") == false)
                             {
@@ -299,9 +275,9 @@ namespace ExportImport_MazzerTraduzioni
                     }                    
 
                     foreach (string languageColumn in columnNames)
-                    {                        
-                        //foreach (DataRow row in dt_excel.Rows)
+                    {
                         for (int i = 0; i < dt_excel.Rows.Count - 1; i++)
+                        //for (int i = 0; i < dt_excel.Rows.Count; i++)
                         {
                             current_row = dt_excel.Rows[i];
                             next_row = dt_excel.Rows[i + 1];
@@ -332,16 +308,25 @@ namespace ExportImport_MazzerTraduzioni
                             else if (current_row["Area"] != DBNull.Value &&
                                         ((string)current_row["Area"]).Contains('.') == false)
                             {
-
-                                /* Simple method without support table */
+                                /* Simple method without support table*/
+                                /* if the new row is NULL, so can append the subject to the main object */
                                 if (next_row["Area"] == DBNull.Value)
                                 {
                                     subDict.Add(id_string, value_string);
+                                    mainDict.Add((string)current_row["Area"], subDict);
+                                    subDict = new Dictionary<string, object>();
                                 }
+                                /* if the next row's area is identifical to the current row, add the pair as the subobject*/
                                 else if ((string)next_row["Area"] == ((string)current_row["Area"]))
-                                {
-                                    //((IDictionary<String, Object>)exo_1).Add(id_string, value_string);
+                                {                                    
                                     subDict.Add(id_string, value_string);
+                                }
+                                /* if last row in excel is 1 level subobject label, does not need to control the next row (which not exits) */
+                                else if (i == dt_excel.Rows.Count - 1)
+                                {
+                                    subDict.Add(id_string, value_string);
+                                    mainDict.Add((string)current_row["Area"], subDict);
+                                    break;
                                 }
                                 else
                                 {
@@ -350,7 +335,7 @@ namespace ExportImport_MazzerTraduzioni
                                     subDict = new Dictionary<string, object>();
                                 }
 
-                                /* Method based on another support table */
+                                /* Method based on another support table, it does not work well */
                                 //subDict = new Dictionary<string, object>();
                                 //string current_so_label = (string)current_row["Area"];
                                 //DataRow dr_so = dt_support_unique_level.AsEnumerable().FirstOrDefault(r => r.Field<string>("area") == current_so_label);
