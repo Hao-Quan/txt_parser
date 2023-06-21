@@ -172,7 +172,7 @@ namespace ExportImport_MazzerTraduzioni
                     dt_lookuptab_pair.Columns.Add("key");
                     dt_lookuptab_pair.Columns.Add("value");
 
-
+                    /* Fill */
                     for (int i = 0; i < dt_excel.Rows.Count - 1; i++)
                     {
                         if (dt_excel.Rows[i]["Area"] != DBNull.Value)
@@ -345,217 +345,78 @@ namespace ExportImport_MazzerTraduzioni
                                     dt_lookuptab_label.Rows[current_label_id][5] = current_num_subobjects;
                                 }
 
-
-
-
                                 tot_level = dt_lookuptab_label.AsEnumerable().Max(row => row.Field<int>("level"));
 
+                                /*create a copy of the ordered datatable "dt_lookuptab_label" */
+                                DataTable dt_lookuptab_label_ordered = dt_lookuptab_label;
+                                dt_lookuptab_label_ordered = dt_lookuptab_label_ordered.AsEnumerable()
+                                                               .OrderBy(r => r.Field<int>("level"))
+                                                               .ThenBy(r => r.Field<string>("label_complete"))
+                                                               .CopyToDataTable();
 
-                                /* Start: PROVA con cutomized object */
+                                Dictionary<string, Object> mainDict = new Dictionary<string, Object>();
+                                Dictionary<string, Object> subDict = new Dictionary<string, Object>();
+                                DataRow dr_subpair_current, dr_subobject_current;
 
-                                //IDictionary<string, Dictionary<string, string>> myDictDict = new Dictionary<string, Dictionary<string, string>>();
-                                //Dictionary<string, string> dict = new Dictionary<string, string>();
-                                //dict.Add("tom", "cat");
-                                //myDictDict.Add("hello", dict);
+                                int increment_cnt = 0;
+                                string json_prova_2 = null;
+                                foreach (DataRow dr_lookuptab_label_ordered in dt_lookuptab_label_ordered.Rows)
+                                {                                   
 
-                                //string json_prova_1 = JsonConvert.SerializeObject(myDictDict, Formatting.Indented);
-
-
-                                //JsonObject mainJsonObj = new JsonObject();
-                                //mainJsonObj.label = "supportUser";
-                                //mainJsonObj.complete_label = "supportUser";
-                                //mainJsonObj.jSubObj_list = new List<JsonObject>();
-                                //mainJsonObj.pairItem_list = new List<Item>();
-
-                                //for (int num_level = 0; num_level <= 3; num_level++)
-                                //{
-
-                                //    for (int num_same_level = 0; num_same_level < dt_lookuptab_label.Select("level = " + 0).ToList().Count(); num_same_level++)
-                                //    {                                    
-
-                                //        // add direct sub (key, value) pairs
-                                //        for (int num_subpair = 0; num_subpair < 2; num_subpair++)
-                                //        {
-                                //            Item newJSubPair = new Item();
-                                //            newJSubPair.key = "ciao";
-                                //            newJSubPair.value = "quan";
-                                //            mainJsonObj.pairItem_list.Add(newJSubPair);
-                                //        }
-
-                                //        // add direct subobjects
-                                //        for (int num_subobj = 0; num_subobj < 2; num_subobj++)
-                                //        {
-                                //            JsonObject newJSubObj = new JsonObject();
-                                //            newJSubObj.label = "requestTable";
-                                //            newJSubObj.complete_label = "SupportUser.requestTable";
-                                //            mainJsonObj.jSubObj_list.Add(newJSubObj);
-                                //        }
-                                //    }
-
-                                //}
-                                //string json_prova = JsonConvert.SerializeObject(mainJsonObj, Formatting.Indented);
-                                /* End: PROVA con cutomized object */
-
-
-                                /* PROVA nested dictionary */
-
-                                //var dictionarys = new Dictionary<string, Object>();
-
-                                //dictionarys.Add("Key1", "1");
-
-                                //var subDict1 =
-                                //        new Dictionary<string, Object>();
-
-                                //subDict1.Add("a", "2");
-                                //subDict1.Add("b", "3");
-
-                                //var subDict2 =
-                                //        new Dictionary<string, Object>();
-                                //subDict2.Add("d", "2");
-                                //subDict2.Add("e", "3");
-
-                                //subDict1.Add("c", subDict2);
-
-                                //dictionarys.Add("Key2", subDict1);
-
-                                //string json_prova_3 = JsonConvert.SerializeObject(dictionarys, Formatting.Indented);
-                                //int pppp = 1;
-
-
-                                var mainDict = new Dictionary<string, Object>();
-                                var subDict = new Dictionary<string, Object>();
-                                for (int num_level = 0; num_level <= 0; num_level++)
-                                {
-                                    for (int num_same_level = 0; num_same_level < 1; num_same_level++)
-                                    //for (int num_same_level = 0; num_same_level < dt_lookuptab_label.Select("level = " + 0).ToList().Count(); num_same_level++)
+                                    if ((int)dr_lookuptab_label_ordered["level"] == 0)
                                     {
-
-                                        // add direct sub (key, value) pairs
-                                        for (int num_subpair = 0; num_subpair < 2; num_subpair++)
+                                        /* add sub pairs*/
+                                        IEnumerable<DataRow> current_subpairs = dt_excel.AsEnumerable().Where(dr => dr.Field<string>("area") == (string)dr_lookuptab_label_ordered["label_complete"]);
+                                        for (int num_subpair = 0; num_subpair < (int)dr_lookuptab_label_ordered["num_subpair"]; num_subpair++)
                                         {
-                                            subDict.Add("endImpersonation" + num_same_level.ToString()+ num_subpair.ToString(), "Chiudi la Rappresentazione");
-                                        }
-                                        
-
-
-                                        // add direct subobjects
-                                        for (int num_subobj = 0; num_subobj < 2; num_subobj++)
-                                        {
-
-                                            subDict.Add("requestTable" + num_same_level.ToString() + num_subobj.ToString(), new Dictionary<string, Object>());
-                                            //mainDict.Add("endImpersonation" + num_same_level.ToString() + num_subobj.ToString(), subDict);
-
+                                            dr_subpair_current = current_subpairs.ElementAt(num_subpair);
+                                            subDict.Add((string)dr_subpair_current[1], (string)dr_subpair_current[2]);
+                                            var skl = 2;
                                         }
 
-                                        mainDict.Add("supportUser" + num_same_level.ToString(), subDict);
+                                        /* add sub objects*/
+                                        string cur_label_complete = (string)dr_lookuptab_label_ordered["label_complete"];
+                                        IEnumerable<DataRow> current_subobjects = dt_lookuptab_label_ordered.AsEnumerable().Where(dr => dr.Field<int>("level") == (int)dr_lookuptab_label_ordered["level"] + 1
+                                                                                                                                        && dr.Field<string>("label_complete").ToString().Contains(cur_label_complete));
+                                        for (int num_subobject = 0; num_subobject < (int)dr_lookuptab_label_ordered["num_subobject"]; num_subobject++)
+                                        {
+                                            dr_subobject_current = current_subobjects.ElementAt(num_subobject);
+                                            subDict.Add((string)dr_subobject_current[2], "");
+                                        }
+
+                                        mainDict.Add((string)dr_lookuptab_label_ordered["label"], subDict);
+                                        json_prova_2 = JsonConvert.SerializeObject(mainDict, Formatting.Indented);
+                                        /* It is important to create a new object rather than Clear it! */
+                                        subDict = new Dictionary<string, object>();
                                     }
-                                }
-                                
-                                //mainDict["0"]["requestTable01"] = "quan";
-                                mainDict["ciao"] = "hao";
-                                string json_prova_3 = JsonConvert.SerializeObject(mainDict, Formatting.Indented);
-
-
-                            
-
-
-                                var sssss = mainDict.All(f => f.Key.Contains("requestTable"));
-
-                                foreach (object key_dict in mainDict.Keys)
-                                {
-                                    var ttty = key_dict.GetType();
-
-                                    
-                                }
-
-                                var sssq = mainDict.Values.ElementAt(1);
-
-                                foreach (var value_dict in mainDict.Values)
-                                {
-                                    //if ((string)value_dict == "requestTable")
-                                    //{
-                                    //    var ok = key_dict;
-                                    //    //int ooo = 2;
-                                    //}
-
-                                    if (value_dict.GetType() != typeof(String) )
+                                    /* not the root level 0, then traverse all the children*/
+                                    else
                                     {
-                                        var current = 1;
-                                            
+                                        /* add sub pairs*/
+                                        IEnumerable<DataRow> current_subpairs = dt_excel.AsEnumerable().Where(dr => dr.Field<string>("area") == (string)dr_lookuptab_label_ordered["label_complete"]);
+                                        for (int num_subpair = 0; num_subpair < (int)dr_lookuptab_label_ordered["num_subpair"]; num_subpair++)
+                                        {
+                                            dr_subpair_current = current_subpairs.ElementAt(num_subpair);
+                                            subDict.Add((string)dr_subpair_current[1], (string)dr_subpair_current[2]);
+                                            var skl = 2;
+                                        }
+
+                                        /* add sub objects*/
+                                        string cur_label_complete = (string)dr_lookuptab_label_ordered["label_complete"];
+                                        IEnumerable<DataRow> current_subobjects = dt_lookuptab_label_ordered.AsEnumerable().Where(dr => dr.Field<int>("level") == (int)dr_lookuptab_label_ordered["level"] + 1
+                                                                                                                                        && dr.Field<string>("label_complete").ToString().Contains(cur_label_complete));
+                                        for (int num_subobject = 0; num_subobject < (int)dr_lookuptab_label_ordered["num_subobject"]; num_subobject++)
+                                        {
+                                            dr_subobject_current = current_subobjects.ElementAt(num_subobject);
+                                            subDict.Add((string)dr_subobject_current[2], "");
+                                        }
+                                        NestedDictIteration(mainDict, (string)dr_lookuptab_label_ordered["label"], subDict);
+                                        json_prova_2 = JsonConvert.SerializeObject(mainDict, Formatting.Indented);
+                                        subDict = new Dictionary<string, object>();
                                     }
 
-                                    
-                                }
-
-                                //foreach (PropertyInfo prop  in mainDict.)
-                                //    foreach (var value_dict in mainDict.Values)
-                                //    {
-                                //        if ((string)value_dict == "requestTable")
-                                //        {
-                                //            var ok = key_dict;
-                                //            //int ooo = 2;
-                                //        }
-                                //        int ooo = 2;
-                                //    }
-
-                                int wwww = 1;
-
-                                //IDictionary<string, Dictionary<string, string>> myDc;
-                                //IDictionary<string, Dictionary<string, string>> tempDc;
-                                ////List<Dictionary<string, string>> dc;
-                                //Dictionary<string, string> dc;
-
-                                //myDc = new Dictionary<string, Dictionary<string, string>>();
-
-                                //for (int num_level = 0; num_level <= 0; num_level++)
-                                //{
-                                //    //dc = new List<Dictionary<string, string>>();
-                                //    dc = new Dictionary<string, string>();
-                                //    //for (int num_same_level = 0; num_same_level < dt_lookuptab_label.Select("level = " + 0).ToList().Count(); num_same_level++)
-                                //    for (int num_same_level = 0; num_same_level < 2; num_same_level++)
-                                //    {
-
-                                //        dc.Add("endImpersonation" + num_same_level.ToString(), "Chiudi la Rappresentazione");
-                                //        dc.Add("end" + num_same_level.ToString(), "Chiudi la Rap");
-                                //        myDc.Add("supportUser" + num_same_level.ToString(), dc);
-                                //    }
-                                //}                                
-
-                                //string json_prova_2 = JsonConvert.SerializeObject(myDc, Formatting.Indented);
-
-
-                                //NestedDictionary<string, string> dict = new NestedDictionary<string, string>();
-                                ////dict.value = "ss";
-                                //dict["one"].value = "Nest level 1";
-                                //dict["one"]["two"]["three"].value = "Nest level 3";
-                                ////dict["FieldA"]["FieldB"].Value = "Hello World";
-                                ////dict["FieldA"]["FieldB"]["quan"].Value = "hao";
-                                ////dict["FieldA"]["FieldB"]["quan"].Value = "ciao";
-                                //string json_prova_dict = JsonConvert.SerializeObject(dict, Formatting.Indented);
-
-                                //Dictionary<string, string> dict_v = new Dictionary<string, string>();
-                                //dict_v["1"] = "foo";
-                                //dict_v["2"] = "bar";
-
-                                //var obj = new Dictionary<string, object>()
-                                //                {
-                                //                    {
-                                //                        "components", new Dictionary<string,object>()
-                                //                        {
-                                //                            {
-                                //                                "unit_info" , new Dictionary<string,object>()
-                                //                                {
-                                //                                    { "bla", "blubb" }, {"blubb", "bla" }
-                                //                                }
-                                //                            },
-                                //                            { "ciao", "quan"}
-                                //                        }
-                                //                    }
-                                //                };
-                                //string json_prova_d = JsonConvert.SerializeObject(obj, Formatting.Indented);
-
-                                /*END PROVA*/
-
+                                    increment_cnt++;                                                                       
+                                }                    
 
                                 // loop each label level
                                 for (int j = 0; j <= tot_level; j++)
@@ -717,6 +578,34 @@ namespace ExportImport_MazzerTraduzioni
             }
             
         }
+
+    public static void NestedDictIteration(Dictionary<string, object> nestedDict, string target_key, Dictionary<string, object> subDict)
+    {
+        foreach (string key in nestedDict.Keys)
+        {
+            Console.WriteLine(key);
+            object nextLevel_value = nestedDict[key];
+            //if (nextLevel == null || nextLevel.GetType() == typeof(string))
+            if (nextLevel_value.GetType() == typeof(string) && nextLevel_value.ToString().Length != 0)
+            {
+                continue;
+            }
+            else if (nextLevel_value.GetType() == typeof(string) && nextLevel_value.ToString().Length == 0 && key != target_key)
+            {
+                continue;
+            }
+            else if (nextLevel_value.GetType() == typeof(string) && nextLevel_value.ToString().Length == 0 && key == target_key)
+            {
+                    nestedDict[key] = subDict;                   
+                    return;
+            }           
+           
+            NestedDictIteration((Dictionary<string, object>)nextLevel_value, target_key, subDict);
+            
+            
+        }
+    }
+
 
         public static void RecursiveParseExcelToJson(List<string> lstA, string idstr, string valuestr)
         {
