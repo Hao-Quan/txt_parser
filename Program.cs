@@ -143,12 +143,26 @@ namespace ExportImport_MazzerTraduzioni
                     bool flagSameFirstArea = false;
                     string currentFirstArea = null;
 
+
+                    /* support table stores "area" with > 1 levels, e.g., "supportUser.requestsTable" */
                     DataTable dt_support = new DataTable();
                     dt_support.Clear();
                     dt_support.Columns.Add("area");
                     dt_support.Columns.Add("start_idx", typeof(Int32));
                     dt_support.Columns.Add("end_idx", typeof(Int32));                    
-                    DataRow dr_support = dt_support.NewRow();                    
+                    DataRow dr_support = dt_support.NewRow();
+
+                    /* support table stores "area" with only  = 1 levels, e.g., "navigation" */
+                    List<string> areaWithUniqueSubObj;
+                    string current_row_label = null;
+                    string next_row_label = null;
+                    bool flagSameArea = false;
+                    DataTable dt_support_unique_level = new DataTable();
+                    dt_support_unique_level.Clear();
+                    dt_support_unique_level.Columns.Add("area");
+                    dt_support_unique_level.Columns.Add("start_idx", typeof(Int32));
+                    dt_support_unique_level.Columns.Add("end_idx", typeof(Int32));
+                    DataRow dr_support_unique_level = dt_support_unique_level.NewRow();
 
 
                     DataTable dt_lookuptab_label;
@@ -182,37 +196,74 @@ namespace ExportImport_MazzerTraduzioni
                     dt_lookuptab_pair.Columns.Add("value");
 
                     /* Fill datatable support with indexes of (start, end) only 1 level subobjects*/
-                    //for (int i = 0; i < dt_excel.Rows.Count - 1; i++)
-                    //{
-                    //    if (dt_excel.Rows[i]["Area"] != DBNull.Value)
-                    //    {
-                    //        if (areaWithMultipleSubObj.Contains((string)dt_excel.Rows[i]["Area"]) == false
-                    //            && ((string)dt_excel.Rows[i]["Area"]).Contains(".") == false)
-                    //        {
-                    //            areaWithMultipleSubObj.Add((string)dt_excel.Rows[i]["Area"]);
+                    areaWithUniqueSubObj = new List<string>();
+                    for (int i = 0; i < dt_excel.Rows.Count - 1; i++)
+                    {
+                        if (dt_excel.Rows[i]["Area"] != DBNull.Value)
+                        {
+                            /* only contains 1 level of subobj*/
+                            //if (((string)dt_excel.Rows[i]["Area"]).Contains(".") == false)
+                            //{
 
-                    //            //if (firstAreaWithMultipleSubObj.Contains(((string)dt_excel.Rows[i]["Area"]).Split(".")[0]) == false)
-                    //            //{
-                    //            //    firstAreaWithMultipleSubObj.Add(((string)dt_excel.Rows[i]["Area"]).Split(".")[0]);
+                            //    current_row_label = ((string)dt_excel.Rows[i]["Area"]);
+                            //    if (areaWithUniqueSubObj.Contains(current_row_label) == false)
+                            //    {
+                            //        flagSameArea = false;
+                            //        current_unique_label = current_row_label;
+                            //        areaWithUniqueSubObj.Add(current_unique_label);                                    
+                            //        dr_support_unique_level["area"] = current_unique_label;
+                            //        dr_support_unique_level["start_idx"] = i;                                    
+                            //    }
+                            //    //else if (current_row_label == current_unique_label)
+                            //    else if (areaWithUniqueSubObj.Contains(current_row_label) == true)
+                            //    {
+                            //        flagSameArea = true;
+                            //    }
+                            //    if (current_row_label != current_unique_label)
+                            //    {
+                            //        dr_support_unique_level["end_idx"] = i - 1;
+                            //        dt_support_unique_level.Rows.Add(dr_support_unique_level);
+                            //        dr_support_unique_level = dt_support_unique_level.NewRow();                                    
+                            //    }
+                            //}
 
+                            if (((string)dt_excel.Rows[i]["Area"]).Contains(".") == false)
+                            {
 
-                    //            dr_support["area"] = ((string)dt_excel.Rows[i]["Area"]);
-                    //            dr_support["start_idx"] = i;
+                                current_row_label = ((string)dt_excel.Rows[i]["Area"]);
+                                if (dt_excel.Rows[i + 1]["Area"] != DBNull.Value)
+                                {
+                                    next_row_label = (string)dt_excel.Rows[i + 1]["Area"];
+                                }
+                                else
+                                {
+                                    next_row_label = "";
+                                }
+                                
 
-                    //            currentFirstArea = ((string)dt_excel.Rows[i]["Area"]).Split(".")[0];
-                    //            flagSameFirstArea = true;
-                    //            //}
-                    //        }
+                                if (areaWithUniqueSubObj.Contains(current_row_label) == false)
+                                {
+                                    areaWithUniqueSubObj.Add(current_row_label);
+                                    dr_support_unique_level["area"] = current_row_label;
+                                    dr_support_unique_level["start_idx"] = i;
+                                }
 
-                    //        if ((((string)dt_excel.Rows[i]["Area"]).Split(".")[0]) != currentFirstArea && flagSameFirstArea == true)
-                    //        {
-                    //            dr_support["end_idx"] = i - 1;
-                    //            dt_support.Rows.Add(dr_support);
-                    //            dr_support = dt_support.NewRow();
-                    //            flagSameFirstArea = false;
-                    //        }
-                    //    }
-                    //}
+                                if (current_row_label != next_row_label && (current_row_label != (string)dt_excel.Rows[dt_excel.Rows.Count - 1]["area"]))
+                                {
+                                    dr_support_unique_level["end_idx"] = i;
+                                    dt_support_unique_level.Rows.Add(dr_support_unique_level);
+                                    dr_support_unique_level = dt_support_unique_level.NewRow();
+                                }
+                                
+                                if (current_row_label == (string)dt_excel.Rows[dt_excel.Rows.Count - 1]["area"])
+                                {
+                                    dr_support_unique_level["end_idx"] = dt_excel.Rows.Count - 1;
+                                    dt_support_unique_level.Rows.Add(dr_support_unique_level);
+                                    break;
+                                }
+                            }
+                        }
+                    }
 
                     /* Fill datatable support indexes of (start, end) with more than 1 level subobjects*/
                     for (int i = 0; i < dt_excel.Rows.Count - 1; i++)
@@ -277,18 +328,20 @@ namespace ExportImport_MazzerTraduzioni
 
                             /* when "Area" is NOT empty, it means it has subobjects*/
 
+                            /* in case of only 1 subobject*/
                             else if (current_row["Area"] != DBNull.Value &&
                                         ((string)current_row["Area"]).Contains('.') == false)
                             {
 
+                                /* Simple method without support table */
                                 if (next_row["Area"] == DBNull.Value)
                                 {
-                                    subDict.Add(id_string, value_string);                                    
+                                    subDict.Add(id_string, value_string);
                                 }
                                 else if ((string)next_row["Area"] == ((string)current_row["Area"]))
                                 {
                                     //((IDictionary<String, Object>)exo_1).Add(id_string, value_string);
-                                    subDict.Add(id_string, value_string);                                    
+                                    subDict.Add(id_string, value_string);
                                 }
                                 else
                                 {
@@ -296,7 +349,22 @@ namespace ExportImport_MazzerTraduzioni
                                     mainDict.Add((string)current_row["Area"], subDict);
                                     subDict = new Dictionary<string, object>();
                                 }
-                                
+
+                                /* Method based on another support table */
+                                //subDict = new Dictionary<string, object>();
+                                //string current_so_label = (string)current_row["Area"];
+                                //DataRow dr_so = dt_support_unique_level.AsEnumerable().FirstOrDefault(r => r.Field<string>("area") == current_so_label);
+                                //int start_so_idx = (int)dr_so["start_idx"];
+                                //int end_so_idx = (int)dr_so["end_idx"];
+                                //for (int so = start_so_idx; so <= end_so_idx; so++)
+                                //{
+                                //    subDict.Add((string)dt_excel.Rows[so]["Id"], (string)dt_excel.Rows[so][languageColumn]);
+                                //}
+                                //mainDict.Add(current_so_label, subDict);
+                                //i = end_so_idx + 1;
+
+                                //var json_prova_5 = JsonConvert.SerializeObject(mainDict, Formatting.Indented);
+                                //File.WriteAllText("C:\\Users\\quan\\Documents\\project_2023\\parser\\backup\\csharp_webapp_en_partial.json", json_prova_5);
                             }
 
                             /* try to manage multiple subobject levels */
@@ -489,6 +557,7 @@ namespace ExportImport_MazzerTraduzioni
 
                             }
                             var json_prova_3 = JsonConvert.SerializeObject(mainDict, Formatting.Indented);
+                            File.WriteAllText("C:\\Users\\quan\\Documents\\project_2023\\parser\\backup\\csharp_webapp_en.json", json_prova_3);
                             var sqq = 2;
                                   
                         }
