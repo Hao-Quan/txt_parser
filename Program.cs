@@ -103,7 +103,9 @@ namespace ExportImport_MazzerTraduzioni
                 FileStream stream = File.Open(path_file, FileMode.Open, FileAccess.Read);
                 IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(stream);
                 DataSet ds = excelReader.AsDataSet();                
-                DataTable dt_excel = ds.Tables[0];                             
+                DataTable dt_excel = ds.Tables[0];
+                Dictionary<string, Object> mainDict = new Dictionary<string, Object>();
+                Dictionary<string, Object> subDict = new Dictionary<string, Object>();
 
                 first_cell = (string)dt_excel.Rows[0][0];
                 if (first_cell == "Area")
@@ -138,30 +140,37 @@ namespace ExportImport_MazzerTraduzioni
                     // get "area" has > 1 sub-subjects
                     List<string> areaWithMultipleSubObj = new List<string>();
                     List<string> firstAreaWithMultipleSubObj = new List<string>();
+                    bool flagSameFirstArea = false;
+                    string currentFirstArea = null;
+
                     DataTable dt_support = new DataTable();
                     dt_support.Clear();
                     dt_support.Columns.Add("area");
                     dt_support.Columns.Add("start_idx", typeof(Int32));
-                    dt_support.Columns.Add("end_idx", typeof(Int32));
-                    DataRow dr_support = dt_support.NewRow();
-                    bool flagSameFirstArea = false;
-                    string currentFirstArea = null;
+                    dt_support.Columns.Add("end_idx", typeof(Int32));                    
+                    DataRow dr_support = dt_support.NewRow();                    
 
-                    DataTable dt_lookuptab_label = new DataTable();                    
-                    DataColumn column = new DataColumn("label_id");
+
+                    DataTable dt_lookuptab_label;
+                    DataColumn column;
+
+                    dt_lookuptab_label = new DataTable();
+                    column = new DataColumn("label_id");
                     column.DataType = System.Type.GetType("System.Int32");
                     column.AutoIncrement = true;
                     column.AutoIncrementSeed = 0;
                     column.AutoIncrementStep = 1;
                     dt_lookuptab_label.Columns.Add(column);
-                    dt_lookuptab_label.Columns.Add("level", typeof(Int32));                    
+                    dt_lookuptab_label.Columns.Add("level", typeof(Int32));
                     dt_lookuptab_label.Columns.Add("label");
                     dt_lookuptab_label.Columns.Add("label_complete");
                     dt_lookuptab_label.Columns.Add("num_subpair", typeof(Int32));
                     dt_lookuptab_label.Columns.Add("num_subobject", typeof(Int32));
 
 
-                    DataTable dt_lookuptab_pair = new DataTable();
+                    DataTable dt_lookuptab_pair;
+
+                    dt_lookuptab_pair = new DataTable();
                     column = new DataColumn("pair_id");
                     column.DataType = System.Type.GetType("System.Int32");
                     column.AutoIncrement = true;
@@ -172,13 +181,46 @@ namespace ExportImport_MazzerTraduzioni
                     dt_lookuptab_pair.Columns.Add("key");
                     dt_lookuptab_pair.Columns.Add("value");
 
-                    /* Fill */
+                    /* Fill datatable support with indexes of (start, end) only 1 level subobjects*/
+                    //for (int i = 0; i < dt_excel.Rows.Count - 1; i++)
+                    //{
+                    //    if (dt_excel.Rows[i]["Area"] != DBNull.Value)
+                    //    {
+                    //        if (areaWithMultipleSubObj.Contains((string)dt_excel.Rows[i]["Area"]) == false
+                    //            && ((string)dt_excel.Rows[i]["Area"]).Contains(".") == false)
+                    //        {
+                    //            areaWithMultipleSubObj.Add((string)dt_excel.Rows[i]["Area"]);
+
+                    //            //if (firstAreaWithMultipleSubObj.Contains(((string)dt_excel.Rows[i]["Area"]).Split(".")[0]) == false)
+                    //            //{
+                    //            //    firstAreaWithMultipleSubObj.Add(((string)dt_excel.Rows[i]["Area"]).Split(".")[0]);
+
+
+                    //            dr_support["area"] = ((string)dt_excel.Rows[i]["Area"]);
+                    //            dr_support["start_idx"] = i;
+
+                    //            currentFirstArea = ((string)dt_excel.Rows[i]["Area"]).Split(".")[0];
+                    //            flagSameFirstArea = true;
+                    //            //}
+                    //        }
+
+                    //        if ((((string)dt_excel.Rows[i]["Area"]).Split(".")[0]) != currentFirstArea && flagSameFirstArea == true)
+                    //        {
+                    //            dr_support["end_idx"] = i - 1;
+                    //            dt_support.Rows.Add(dr_support);
+                    //            dr_support = dt_support.NewRow();
+                    //            flagSameFirstArea = false;
+                    //        }
+                    //    }
+                    //}
+
+                    /* Fill datatable support indexes of (start, end) with more than 1 level subobjects*/
                     for (int i = 0; i < dt_excel.Rows.Count - 1; i++)
                     {
                         if (dt_excel.Rows[i]["Area"] != DBNull.Value)
                         {
                             if (areaWithMultipleSubObj.Contains((string)dt_excel.Rows[i]["Area"]) == false
-                                && ((string)dt_excel.Rows[i]["Area"]).Contains("."))
+                                && ((string)dt_excel.Rows[i]["Area"]).Contains("."))                                
                             {                                
                                 areaWithMultipleSubObj.Add((string)dt_excel.Rows[i]["Area"]);
                                     
@@ -205,9 +247,6 @@ namespace ExportImport_MazzerTraduzioni
                         }                                
                     }                    
 
-                    dynamic exo = new System.Dynamic.ExpandoObject();
-                    dynamic exo_1 = new System.Dynamic.ExpandoObject();
-
                     foreach (string languageColumn in columnNames)
                     {                        
                         //foreach (DataRow row in dt_excel.Rows)
@@ -231,48 +270,73 @@ namespace ExportImport_MazzerTraduzioni
                             // when "Area" is empty, not subobjects
                             if (current_row["Area"] == DBNull.Value)
                             {
-                                ((IDictionary<String, Object>)exo).Add(id_string, value_string);
+                                //((IDictionary<String, Object>)exo).Add(id_string, value_string);                                
+                                mainDict.Add(id_string, value_string);
                             }
+                            //var json_prova_1 = JsonConvert.SerializeObject(mainDict, Formatting.Indented);
 
                             /* when "Area" is NOT empty, it means it has subobjects*/
 
-                            /* just manage 1 level of subobject case*/
-                            else if (((string)current_row["Area"]).Split('.').Length == 1)
+                            else if (current_row["Area"] != DBNull.Value &&
+                                        ((string)current_row["Area"]).Contains('.') == false)
                             {
-                                exo_1 = new System.Dynamic.ExpandoObject();
-                                List<string> listArea = ((string)current_row["Area"]).Split('.').ToList<string>();
-                                //List<string> listArea = ((string)row["Area"]).Split('.').Reverse().ToList<string>();
-                                foreach (string areaElement in listArea)
+
+                                if (next_row["Area"] == DBNull.Value)
                                 {
-
-                                    // the next row record has the same area with the current row, add pairs to the same subobject "exo_1"
-                                    if ((string)next_row["Area"] == ((string)current_row["Area"]))
-                                    {
-                                        ((IDictionary<String, Object>)exo_1).Add(id_string, value_string);
-                                    }
-                                    // the next row record has the different area with the current row, so we can add the subobject "exo_1" to the parent node "exo"
-                                    else
-                                    {
-                                        ((IDictionary<String, Object>)exo_1).Add(id_string, value_string);
-                                        ((IDictionary<String, Object>)exo).Add(areaElement, exo_1);
-                                        // clean the first subobject contents
-                                        exo_1 = new System.Dynamic.ExpandoObject();
-                                    }
+                                    subDict.Add(id_string, value_string);                                    
                                 }
-
+                                else if ((string)next_row["Area"] == ((string)current_row["Area"]))
+                                {
+                                    //((IDictionary<String, Object>)exo_1).Add(id_string, value_string);
+                                    subDict.Add(id_string, value_string);                                    
+                                }
+                                else
+                                {
+                                    subDict.Add(id_string, value_string);
+                                    mainDict.Add((string)current_row["Area"], subDict);
+                                    subDict = new Dictionary<string, object>();
+                                }
+                                
                             }
+
                             /* try to manage multiple subobject levels */
                             else if (((string)current_row["Area"]).Split('.').Length > 1)
                             {
+                                //dt_lookuptab_label.Clear();
+                                //dt_lookuptab_pair.Clear();
 
-                                //DataRow newRow = dt.NewRow();
-                                //newRow[column1] = item.area;
-                                //newRow[column2] = item.key;
-                                //newRow[column_name] = item.value;
-                                //dt.Rows.Add(newRow);
+                                //dt_lookuptab_label.Columns["label_id"].AutoIncrementSeed = 0;
+                                //dt_lookuptab_label.Columns["label_id"].AutoIncrementStep = 1;
+                                //dt_lookuptab_pair.Columns["pair_id"].AutoIncrementSeed = 0;
+                                //dt_lookuptab_pair.Columns["pair_id"].AutoIncrementStep = 1;
 
-                                dt_lookuptab_label.Clear();
-                                dt_lookuptab_pair.Clear();
+                                //dt_lookuptab_pair.Columns[0].AutoIncrementSeed = 0;
+                                //dt_lookuptab_label = new DataTable();
+                                //dt_lookuptab_pair = new DataTable();
+
+                                dt_lookuptab_label = new DataTable();
+                                column = new DataColumn("label_id");
+                                column.DataType = System.Type.GetType("System.Int32");
+                                column.AutoIncrement = true;
+                                column.AutoIncrementSeed = 0;
+                                column.AutoIncrementStep = 1;
+                                dt_lookuptab_label.Columns.Add(column);
+                                dt_lookuptab_label.Columns.Add("level", typeof(Int32));
+                                dt_lookuptab_label.Columns.Add("label");
+                                dt_lookuptab_label.Columns.Add("label_complete");
+                                dt_lookuptab_label.Columns.Add("num_subpair", typeof(Int32));
+                                dt_lookuptab_label.Columns.Add("num_subobject", typeof(Int32));
+
+                                dt_lookuptab_pair = new DataTable();
+                                column = new DataColumn("pair_id");
+                                column.DataType = System.Type.GetType("System.Int32");
+                                column.AutoIncrement = true;
+                                column.AutoIncrementSeed = 0;
+                                column.AutoIncrementStep = 1;
+                                dt_lookuptab_pair.Columns.Add(column);
+                                dt_lookuptab_pair.Columns.Add("label_id", typeof(Int32));
+                                dt_lookuptab_pair.Columns.Add("key");
+                                dt_lookuptab_pair.Columns.Add("value");
 
                                 DataRow row_tb_lable = dt_lookuptab_label.NewRow();
                                 row_tb_lable["level"] = 0;
@@ -293,7 +357,7 @@ namespace ExportImport_MazzerTraduzioni
                                 int current_labelId = -1;
                                 List<DataRow> labels_same_level = new List<DataRow>();
                                 List<DataRow> selected_paris_row = new List<DataRow>();
-                                exo_1 = new System.Dynamic.ExpandoObject();
+                                //exo_1 = new System.Dynamic.ExpandoObject();
 
                                 /* fill table "dt_lookuptab_label" */
                                 for (int j = currentSubObj_startIdx; j <= currentSubObj_endIdx; j++)
@@ -353,9 +417,8 @@ namespace ExportImport_MazzerTraduzioni
                                                                .OrderBy(r => r.Field<int>("level"))
                                                                .ThenBy(r => r.Field<string>("label_complete"))
                                                                .CopyToDataTable();
-
-                                Dictionary<string, Object> mainDict = new Dictionary<string, Object>();
-                                Dictionary<string, Object> subDict = new Dictionary<string, Object>();
+                      
+                                
                                 DataRow dr_subpair_current, dr_subobject_current;
 
                                 int increment_cnt = 0;
@@ -410,107 +473,25 @@ namespace ExportImport_MazzerTraduzioni
                                             dr_subobject_current = current_subobjects.ElementAt(num_subobject);
                                             subDict.Add((string)dr_subobject_current[2], "");
                                         }
+
+                                        /*funzione ricorsiva for finding the correct sub-key and append its subobjects structure*/
                                         NestedDictIteration(mainDict, (string)dr_lookuptab_label_ordered["label"], subDict);
                                         json_prova_2 = JsonConvert.SerializeObject(mainDict, Formatting.Indented);
                                         subDict = new Dictionary<string, object>();
                                     }
 
                                     increment_cnt++;                                                                       
-                                }                    
-
-                                // loop each label level
-                                for (int j = 0; j <= tot_level; j++)
-                                    {                                    
-                                    labels_same_level = dt_lookuptab_label.Select("level = " + j).ToList();
-                                    
-                                    // loop the same level has different labels
-                                    for (int k = 0; k < labels_same_level.Count(); k++)
-                                    {
-                                        current_labelId = (int)labels_same_level[k]["label_id"];
-                                        selected_paris_row = dt_lookuptab_pair.Select("label_id = " + k).ToList();
-
-                                        // for each label of the specific level, get those (key, value) pairs
-                                        for (int m = 0; m < selected_paris_row.Count; m++)
-                                        {
-                                            ((IDictionary<String, Object>)exo_1).Add((string)selected_paris_row[m]["key"], (string)selected_paris_row[m]["value"]);                                            
-                                        }
-
-                                        // add the set of pairs to its parent object label 
-                                        ((IDictionary<String, Object>)exo).Add((string)labels_same_level[k]["label"], exo_1);
-                                        exo_1 = new System.Dynamic.ExpandoObject();
-
-                                        // please refer to: https://stackoverflow.com/questions/10252675/create-json-dynamically-in-c-sharp
-
-                                        //var sk = exo[28];
-                                        //IDictionary<String, Object> hao = exo;
-                                        //hao["supportUser"] = new Dictionary<String, Object>();
-                                        //hao["supportUser"].add
-                                        //hao["supportUser"]["yang"] = "haiyan";
-                                        //.Add("quan", "hao");
-                                        //var q = hao["supportUser"];
-
-                                        //object r = (IDictionary<String, Object>)exo.FirstOrDefault(row => row[0] == "requestsTable").Value;
-
-                                        // for debug
-                                        string tryjson = Newtonsoft.Json.JsonConvert.SerializeObject(exo, Formatting.Indented);
-                                        var s = 1;
-                                    }
-                                    
-                                    
-                                }
+                                }                            
 
                                 // move index to the final of this first subobject
-                                i = currentSubObj_endIdx;
-
-                                //foreach (DataRow firstAreaObj in dt_support.Rows) {                                    
-                                //    for (int fobj_idx = (int)firstAreaObj["start_idx"]; i <= (int)firstAreaObj["end_idx"]; i++)
-                                //    {
-                                //        var s = ;
-                                //    }
-                                //}
-                   
-
-                                //List<string> listArea = ((string)current_row["Area"]).Split('.').ToList<string>();
-                                ////List<string> listArea = ((string)row["Area"]).Split('.').Reverse().ToList<string>();
-                                //int cnt_subobj = listArea.Count;
-                                ////RecursiveParseExcelToJson(listArea, id_string, value_string);
-
-                                //foreach (string areaElement in listArea)
-                                //{
-                                //    // the next row record has the same area with the current row, add pairs to the same subobject "exo_1"
-                                //    if ((string)next_row["Area"] == ((string)current_row["Area"]) && (listArea.Count == 1))
-                                //    {
-                                //        ((IDictionary<String, Object>)exo_1).Add(id_string, value_string);
-                                //    }
-                                //    // the next row record has the different area with the current row, so we can add the subobject "exo_1" to the parent node "exo"
-                                //    else
-                                //    {
-                                //        ((IDictionary<String, Object>)exo_1).Add(id_string, value_string);
-                                //        ((IDictionary<String, Object>)exo).Add(areaElement, exo_1);
-                                //        exo_1 = new System.Dynamic.ExpandoObject();
-                                //    }
-                                //}
+                                i = currentSubObj_endIdx;                                            
                             }                                
 
                             }
-                            //((IDictionary<String, Object>)exo_1).Add("subkey", "subvalore");
-                            //((IDictionary<String, Object>)exo).Add("sotto", exo_1);
-
-                            string e_json = Newtonsoft.Json.JsonConvert.SerializeObject(exo, Formatting.Indented);
+                            var json_prova_3 = JsonConvert.SerializeObject(mainDict, Formatting.Indented);
                             var sqq = 2;
                                   
                         }
-                        var sss = 1;
-                        Newtonsoft.Json.JsonConvert.SerializeObject(exo);
-                        
-                    
-
-                    //    dynamic exo = new System.Dynamic.ExpandoObject();
-                    
-                    //foreach (string field in fields)
-                    //{
-                    //    ((IDictionary<String, Object>)exo).Add(field, field + "_data");
-                    //}
                     
                 }
                 else
@@ -585,7 +566,6 @@ namespace ExportImport_MazzerTraduzioni
         {
             Console.WriteLine(key);
             object nextLevel_value = nestedDict[key];
-            //if (nextLevel == null || nextLevel.GetType() == typeof(string))
             if (nextLevel_value.GetType() == typeof(string) && nextLevel_value.ToString().Length != 0)
             {
                 continue;
@@ -599,9 +579,8 @@ namespace ExportImport_MazzerTraduzioni
                     nestedDict[key] = subDict;                   
                     return;
             }           
-           
+       
             NestedDictIteration((Dictionary<string, object>)nextLevel_value, target_key, subDict);
-            
             
         }
     }
@@ -860,28 +839,6 @@ namespace ExportImport_MazzerTraduzioni
             public string key;
             public string value;
         }
-
-
-        //public class NestedDictionary<K, V> : Dictionary<K, NestedDictionary<K, V>>
-        //{
-        //    public V value { set; get; }
-
-        //    public new NestedDictionary<K, V> this[K key]
-        //    {
-        //        set { base[key] = value;
-        //        }
-
-        //        get
-        //        {
-        //            if (!base.Keys.Contains<K>(key))
-        //            {
-        //                base[key] = new NestedDictionary<K, V>();
-        //            }                    
-
-        //            return base[key];
-        //        }
-        //    }
-        //}
     }
 }
 
